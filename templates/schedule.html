@@ -16,6 +16,30 @@
       }
     </style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
+<style type="text/css">
+  table th {
+  width:100px;
+  height:40px;
+  text-align:center;
+  vertical-align:middle;
+  background-color:#888888;
+  border:1px solid #fff;
+}
+
+table td {
+  width:100px;
+  height:40px;
+  text-align:center;
+  vertical-align:middle;
+  background-color:#ccc;
+  border:1px solid #fff;
+}
+
+table td.highlighted {
+  background-color:#999;
+}​
+</style>
+
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -56,6 +80,37 @@
 
     <div class="container">
 
+<table cellpadding="0" cellspacing="0" id="our_table">
+<tr>
+<th>Monday</th>
+<th>Tuesday</th>
+<th>Wednesday</th>
+<th>Thursday</th>
+<th>Friday</th>
+</tr>
+  <tr>
+    <td>1 PM</td>
+    <td>1 PM</td>
+    <td>1 PM</td>
+    <td>1 PM</td>
+    <td>1 PM</td>
+  </tr>
+  <tr>
+    <td>2 PM</td>
+    <td>2 PM</td>
+    <td>2 PM</td>
+    <td>2 PM</td>
+    <td>2 PM</td>
+  </tr>
+  <tr>
+    <td>3 PM</td>
+    <td>3 PM</td>
+    <td>3 PM</td>
+    <td>3 PM</td>
+    <td>3 PM</td>
+  </tr>
+</table>​
+
 
 
       <hr>
@@ -72,6 +127,31 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      //<![CDATA[
+$(window).load(function(){
+$(function () {
+var isMouseDown = false;
+$("#our_table td")
+.mousedown(function () {
+isMouseDown = true;
+$(this).toggleClass("highlighted");
+return false; // prevent text selection
+})
+.mouseover(function () {
+if (isMouseDown) {
+$(this).toggleClass("highlighted");
+}
+});
+$(document)
+.mouseup(function () {
+isMouseDown = false;
+});
+});
+});//]]>
+
+</script>
 
 
   </body>
