@@ -204,6 +204,10 @@ def index():
         #return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME)
         return render_template('whentomeet.html')
 
+@app.route('/schedule/', methods=['GET', 'POST'])
+def schedule():
+    return render_template('schedule.html')
+
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
     return render_template('channel.html')
