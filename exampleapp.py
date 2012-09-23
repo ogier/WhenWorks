@@ -140,7 +140,7 @@ def get_token(relative_url):
 
     perms = fb_call('me/permissions',
                     args={'access_token': access_token})
-    if perms['data'][0].get('user_events', None):
+    if 'data' in perms and perms['data'][0].get('user_events', None):
         return access_token
 
     del session['access_token']
