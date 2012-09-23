@@ -189,7 +189,8 @@ def auth_redirect(relative_url):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    access_token = get_token()
+    access_token = access_token = session.get('access_token', None)
+    return render_template('whentomeet.html')
 
     if access_token:
 
