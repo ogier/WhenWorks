@@ -13,6 +13,7 @@ from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 import requests
 from flask import Flask, session, request, redirect, render_template, url_for
+from flask.ext.sqlalchemy import SQLAlchemy
 
 FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 requests = requests.session()
@@ -20,7 +21,7 @@ requests = requests.session()
 app_url = 'https://graph.facebook.com/{0}'.format(FB_APP_ID)
 FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
 FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
-
+SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
@@ -120,6 +121,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_object('conf.Config')
 app.secret_key = SECRET_KEY
+db = SQLAlchemy(app)
 
 
 def get_token(relative_url):
@@ -315,6 +317,7 @@ if __name__ == '__main__':
             print ('Cannot start application without %s set' % conf)
             configured = False
     require('SECRET_KEY')
+    require('DATABASE_URL')
     require('FB_APP_ID')
     require('FB_APP_SECRET')
 
