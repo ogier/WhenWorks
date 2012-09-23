@@ -75,18 +75,20 @@ table td.highlighted {
 </thead>
 <tbody>
   {% for time in times %}
+  {% if usedtimes and not usedtimes[loop.index0] %}
+  <tr></tr>
+  {% else %}
   <tr>
     {% set outer_loop = loop %}
     {% for day in days %}
-      {% if not usedtimes[loop.index0] %}
-        <td class="shrinkCell cellWhite"><td>
-      {% elif available and outer_loop.index0 not in available[loop.index0] %}
+      {% if available and outer_loop.index0 not in available[loop.index0] %}
         <td class="cellWhite">{{ time }}</td>
       {% else %}
         <td>{{ time }}</td>
       {% endif %}
     {% endfor %}
   </tr>
+  {% endif %}
   {% endfor %}
 </tbody>
 
@@ -101,16 +103,6 @@ table td.highlighted {
 
 
 {% block js %}
-  <script type="text/javascript">
-        //<![CDATA[
-  $(window).load(function(){
-    $(function () {
-      
-    });
-  });//]]>
-
-  </script>
-
 <script type="text/javascript">
 $(function() {
 
@@ -145,7 +137,7 @@ $(function() {
 
   $("#create-form").submit(function(e) {
     // e.preventDefault();
-    
+
     var $table = $("#meme"),
         $rows = $table.find("tbody tr");
 
