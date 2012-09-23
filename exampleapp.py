@@ -188,12 +188,22 @@ class Event(db.Model):
     event_id = db.Column(db.Integer)
     available = db.Column(db.String)
 
+    def __init__(self, author_id, event_id, available):
+        self.author_id = author_id
+        self.event_id = event_id
+        self.available = available
+
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
     category = db.relationship('Event',
         backref=db.backref('votes', lazy='dynamic'))
     vote = db.Column(db.String)
+
+    def __init__(self, user_id, category, vote):
+        self.user_id = user_id
+        self.category = category
+        self.vote = vote
 
 def auth_redirect(relative_url):
     return redirect('https://www.facebook.com/dialog/oauth?'
@@ -243,19 +253,10 @@ def index():
         #return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME)
         return render_template('whentomeet.html')
 
-@app.route('/auth/', methods=['GET'])
-def authenticate():
-    if session.get('oauth.state') != request.args.get('state'):
-        abort(401)
-    if request.args.get('error') == 'access_denied':
-        return redirect(request.url_root)
 
-    access_token = get_token()
-    if not access_token:
-        return auth_redirect(url_for('auth'))
-    me = fb_call('me', args={'access_token': access_token})
-    session['user.id'] = int(me['id'])
-    return redirect(request.url_root + 'create/')
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
+    "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
 
 
 @app.route('/create/', methods=['GET', 'POST'])
@@ -266,17 +267,19 @@ def create():
     if 'code' in request.args:
         return redirect(url_for('create'))
 
+    me = fb_call('me',
+                 args={'access_token': access_token})
     events = fb_call('me/events',
                      args={'access_token': access_token})
 
     if request.method == 'POST':
         event_id = int(request.form['fb-event-id'])
-        times = json.loads(request.form['fb-times'])
-        return redirect(url_for('vote', event_id=event_id))
+        available = request.form['fb-times']
+        event = Event(event_id, me['id'], available)
+        db.session.add(event)
+        db.session.commit()
+        return redirect(url_for('vote', event_id=event.id))
 
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
-        "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
     return render_template('schedule.html', title='Schedule an event',
                             events=events['data'],
                             days=days, times=times)
@@ -290,27 +293,23 @@ def vote(event_id):
     if 'code' in request.args:
         return redirect(url_for('vote', event_id=event_id))
 
+    event = Event.query.filter_by(id=event_id).first()
+    available = json.loads(event.available)
+
     events = fb_call('me/events',
                      args={'access_token': access_token})
 
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
-        "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
-    available = [[5,6],[6],[5,6],[3,4,5,6,7,8,9,10,11,12,13],[2,3,4,5,6,7,11,12,13],[1,2,11,12],[6,7]]
     used_times = [False]*24
     for i in xrange(24):
         for l in available:
             if i in l:
                 used_times[i]=True
-    print used_times
 
     return render_template('schedule.html', title='Schedule an event',
                             events=events['data'],
                             event_id=event_id,
                             days=days, times=times,
                             available=available, used_times=used_times),
-    
-    print used_times
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
