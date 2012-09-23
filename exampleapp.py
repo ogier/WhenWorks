@@ -124,63 +124,6 @@ app.secret_key = SECRET_KEY
 db = SQLAlchemy(app)
 
 
-def get_token(relative_url):
-    access_token = session.get('access_token', None)
-
-    if not access_token and 'code' in request.args:
-        params = {
-            'client_id': FB_APP_ID,
-            'client_secret': FB_APP_SECRET,
-            'redirect_uri': request.url_root.rstrip('/') + relative_url,
-            'code': request.args['code']
-        }
-
-        from urlparse import parse_qs
-        r = requests.get('https://graph.facebook.com/oauth/access_token', params=params)
-        access_token = parse_qs(r.content)['access_token'][0]
-        session['access_token'] = access_token
-
-    perms = fb_call('me/permissions',
-                    args={'access_token': access_token})
-    if 'data' in perms and perms['data'][0].get('user_events', None):
-        return access_token
-
-    return False
-
-    # cookie_key = 'fbsr_{0}'.format(FB_APP_ID)
-
-    # if cookie_key in request.cookies:
-
-    #     c = request.cookies.get(cookie_key)
-    #     encoded_data = c.split('.', 2)
-
-    #     sig = encoded_data[0]
-    #     data = json.loads(urlsafe_b64decode(str(encoded_data[1])))
-
-    #     if not data['algorithm'].upper() == 'HMAC-SHA256':
-    #         raise ValueError('unknown algorithm {0}'.format(data['algorithm']))
-
-    #     h = hmac.new(FB_APP_SECRET, digestmod=hashlib.sha256)
-    #     h.update(encoded_data[1])
-    #     expected_sig = urlsafe_b64encode(h.digest()).replace('=', '')
-
-    #     if sig != expected_sig:
-    #         raise ValueError('bad signature')
-
-    #     code =  data['code']
-
-    #     params = {
-    #         'client_id': FB_APP_ID,
-    #         'client_secret': FB_APP_SECRET,
-    #         'redirect_uri': '',
-    #         'code': data['code']
-    #     }
-
-    #     from urlparse import parse_qs
-    #     r = requests.get('https://graph.facebook.com/oauth/access_token', params=params)
-    #     token = parse_qs(r.content).get('access_token')
-
-    #    return token
 
 class Event(db.Model):
     __tablename__ = 'event'
@@ -207,6 +150,30 @@ class Vote(db.Model):
         self.event = event
         self.vote = vote
 
+
+def get_token(relative_url):
+    access_token = session.get('access_token', None)
+
+    if not access_token and 'code' in request.args:
+        params = {
+            'client_id': FB_APP_ID,
+            'client_secret': FB_APP_SECRET,
+            'redirect_uri': request.url_root.rstrip('/') + relative_url,
+            'code': request.args['code']
+        }
+
+        from urlparse import parse_qs
+        r = requests.get('https://graph.facebook.com/oauth/access_token', params=params)
+        access_token = parse_qs(r.content)['access_token'][0]
+        session['access_token'] = access_token
+
+    perms = fb_call('me/permissions',
+                    args={'access_token': access_token})
+    if 'data' in perms and perms['data'][0].get('user_events', None):
+        return access_token
+
+    return False
+
 def auth_redirect(relative_url):
     return redirect('https://www.facebook.com/dialog/oauth?'
                     'client_id=%s'
@@ -214,51 +181,18 @@ def auth_redirect(relative_url):
                     '&scope=user_events,create_event'
                     % (FB_APP_ID, request.url_root.rstrip('/') + relative_url))
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     access_token = access_token = session.get('access_token', None)
     return render_template('whentomeet.html')
 
-    if access_token:
-
-        me = fb_call('me', args={'access_token': access_token})
-        # fb_app = fb_call(FB_APP_ID, args={'access_token': access_token})
-        # likes = fb_call('me/likes',
-        #                 args={'access_token': access_token, 'limit': 4})
-        # friends = fb_call('me/friends',
-        #                   args={'access_token': access_token, 'limit': 4})
-        # photos = fb_call('me/photos',
-        #                  args={'access_token': access_token, 'limit': 16})
-
-        # redir = request.url_root + 'close/'
-        # POST_TO_WALL = ("https://www.facebook.com/dialog/feed?redirect_uri=%s&"
-        #                 "display=popup&app_id=%s" % (redir, FB_APP_ID))
-
-        # app_friends = fql(
-        #     "SELECT uid, name, is_app_user, pic_square "
-        #     "FROM user "
-        #     "WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND "
-        #     "  is_app_user = 1", access_token)
-
-        # SEND_TO = ('https://www.facebook.com/dialog/send?'
-        #            'redirect_uri=%s&display=popup&app_id=%s&link=%s'
-        #            % (redir, FB_APP_ID, request.url_root))
-
-        url = request.url
-
-        return render_template(
-            'index.html', app_id=FB_APP_ID, token=access_token, likes=likes,
-            friends=friends, photos=photos, app_friends=app_friends, app=fb_app,
-            me=me, POST_TO_WALL=POST_TO_WALL, SEND_TO=SEND_TO, url=url,
-            channel_url=channel_url, name=FB_APP_NAME)
-    else:
-        #return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME)
-        return render_template('whentomeet.html')
-
 
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
-    "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
+times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM",
+    "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
+    "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM",
+    "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
 
 
 @app.route('/create/', methods=['GET', 'POST'])
@@ -271,8 +205,6 @@ def create():
 
     me = fb_call('me',
                  args={'access_token': access_token})
-    events = fb_call('me/events',
-                     args={'access_token': access_token})
 
     if request.method == 'POST':
         event_id = int(request.form['fb-event-id'])
@@ -281,6 +213,9 @@ def create():
         db.session.add(event)
         db.session.commit()
         return redirect(url_for('vote', event_id=event.id))
+
+    events = fb_call('me/events',
+                     args={'access_token': access_token})
 
     return render_template('schedule.html', title='Schedule an event',
                             events=events['data'],
@@ -298,6 +233,15 @@ def vote(event_id):
     event = Event.query.filter_by(id=event_id).first()
     available = json.loads(event.available)
 
+    me = fb_call('me',
+                 args={'access_token': access_token})
+
+    if request.method == 'POST':
+        vote = Vote(me['id'], event_id, request.form['fb-times'])
+        db.session.add(vote)
+        db.session.commit()
+        return redirect(url_for('vote', event_id=event_id))
+
     events = fb_call('me/events',
                      args={'access_token': access_token})
 
@@ -306,7 +250,6 @@ def vote(event_id):
         for l in available:
             if i in l:
                 used_times[i]=True
-
     return render_template('schedule.html', title='Schedule an event',
                             events=events['data'],
                             event_id=event_id,
