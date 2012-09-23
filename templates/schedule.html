@@ -3,11 +3,13 @@
 {% block css %}
 <style type="text/css">
   table th {
+  color: white;
   width:100px;
   height:40px;
   text-align:center;
   vertical-align:middle;
-  background-color:#888888;
+
+  background-color:#3B5998;
   border:1px solid #fff;
 }
 
@@ -19,6 +21,12 @@ table td {
   background-color:#ccc;
   border:1px solid #fff;
 }
+.cellWhite
+{
+color: white;
+background-color: White;
+}
+
 
 table td.highlighted {
   background-color:#999;
@@ -33,34 +41,136 @@ table td.highlighted {
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Facebook Events</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
+              <li><a href="#">Event 1</a></li>
+              <li><a href="#">Event 2</a></li>
+              <li class="nav-header">Create an Event</li>
+              <li><input class=span10 type="text" placeholder="Name"></li>
+              <li><input class=span10 type="text" placeholder="Location"></li>
+
+              <!--
+              <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">Privacy Settings <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Open</a></li>
+                  <li><a href="#">Secret</a></li>
+                  <li><a href="#">Friends</a></li>
             </ul>
+-->
+
           </div><!--/.well -->
         </div><!--/span-->
-<table cellpadding="0" cellspacing="0" id="our_table">
-<tr>
+<table cellpadding="0" cellspacing="0" id="meme">
+<thead>
+  <tr>
 <th>Monday</th>
 <th>Tuesday</th>
 <th>Wednesday</th>
 <th>Thursday</th>
 <th>Friday</th>
-</tr>
+<th>Saturday</th>
+<th>Sunday</th>
+  </tr>
+</thead>
+<tbody>
+    <tr>
+    <td>12 AM</td>
+    <td>12 AM</td>
+    <td>12 AM</td>
+    <td>12 AM</td>
+    <td>12 AM</td>
+    <td>12 AM</td>
+    <td>12 AM</td>
+
+  </tr>
+  <tr>
+    <td>1 AM</td>
+    <td>1 AM</td>
+    <td>1 AM</td>
+    <td>1 AM</td>
+    <td>1 AM</td>
+    <td>1 AM</td>
+    <td>1 AM</td>
+
+  </tr>
+  <tr>
+    <td>2 AM</td>
+    <td>2 AM</td>
+    <td>2 AM</td>
+    <td>2 AM</td>
+    <td>2 AM</td>
+    <td>2 AM</td>
+    <td>2 AM</td>
+
+  </tr>
+  <tr>
+    <td>3 AM</td>
+    <td>3 AM</td>
+    <td>3 AM</td>
+    <td>3 AM</td>
+    <td>3 AM</td>
+    <td>3 AM</td>
+    <td>3 AM</td>
+
+  </tr>
+  <tr>
+    <td>4 AM</td>
+    <td>4 AM</td>
+    <td>4 AM</td>
+    <td>4 AM</td>
+    <td>4 AM</td>
+    <td>4 AM</td>
+    <td>4 AM</td>
+
+  </tr>
+  <tr>
+    <td>5 AM</td>
+    <td>5 AM</td>
+    <td>5 AM</td>
+    <td>5 AM</td>
+    <td>5 AM</td>
+    <td>5 AM</td>
+    <td>5 AM</td>
+
+  </tr>
+  <tr>
+    <td>6 AM</td>
+    <td>6 AM</td>
+    <td>6 AM</td>
+    <td>6 AM</td>
+    <td>6 AM</td>
+    <td>6 AM</td>
+    <td>6 AM</td>
+
+  </tr>
+  <tr>
+    <td>7 AM</td>
+    <td>7 AM</td>
+    <td>7 AM</td>
+    <td>7 AM</td>
+    <td>7 AM</td>
+    <td>7 AM</td>
+    <td>7 AM</td>
+
+  </tr>
+    <td>8 AM</td>
+    <td>8 AM</td>
+    <td>8 AM</td>
+    <td>8 AM</td>
+    <td>8 AM</td>
+    <td>8 AM</td>
+    <td>8 AM</td>
+
+
+  </tr>
 <tr>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-  </tr>
-<tr>
     <td>9 AM</td>
     <td>9 AM</td>
     <td>9 AM</td>
     <td>9 AM</td>
     <td>9 AM</td>
+    <td>9 AM</td>
+    <td>9 AM</td>
+
   </tr>
 <tr>
     <td>10 AM</td>
@@ -68,6 +178,9 @@ table td.highlighted {
     <td>10 AM</td>
     <td>10 AM</td>
     <td>10 AM</td>
+    <td>10 AM</td>
+    <td>10 AM</td>
+
   </tr>
 <tr>
     <td>11 AM</td>
@@ -75,6 +188,9 @@ table td.highlighted {
     <td>11 AM</td>
     <td>11 AM</td>
     <td>11 AM</td>
+    <td>11 AM</td>
+    <td>11 AM</td>
+
   </tr>
   <tr>
     <td>12 PM</td>
@@ -82,6 +198,9 @@ table td.highlighted {
     <td>12 PM</td>
     <td>12 PM</td>
     <td>12 PM</td>
+    <td>12 PM</td>
+    <td>12 PM</td>
+
   </tr>
   <tr>
     <td>1 PM</td>
@@ -89,6 +208,9 @@ table td.highlighted {
     <td>1 PM</td>
     <td>1 PM</td>
     <td>1 PM</td>
+    <td>1 PM</td>
+    <td>1 PM</td>
+
   </tr>
   <tr>
     <td>2 PM</td>
@@ -96,6 +218,9 @@ table td.highlighted {
     <td>2 PM</td>
     <td>2 PM</td>
     <td>2 PM</td>
+    <td>2 PM</td>
+    <td>2 PM</td>
+
   </tr>
   <tr>
     <td>3 PM</td>
@@ -103,6 +228,9 @@ table td.highlighted {
     <td>3 PM</td>
     <td>3 PM</td>
     <td>3 PM</td>
+    <td>3 PM</td>
+    <td>3 PM</td>
+
   </tr>
   <tr>
     <td>4 PM</td>
@@ -110,6 +238,9 @@ table td.highlighted {
     <td>4 PM</td>
     <td>4 PM</td>
     <td>4 PM</td>
+    <td>4 PM</td>
+    <td>4 PM</td>
+
   </tr>
   <tr>
     <td>5 PM</td>
@@ -117,13 +248,19 @@ table td.highlighted {
     <td>5 PM</td>
     <td>5 PM</td>
     <td>5 PM</td>
+    <td>5 PM</td>
+    <td>5 PM</td>
+
   </tr>
   <tr>
+    <td >6 PM</td>
     <td>6 PM</td>
     <td>6 PM</td>
     <td>6 PM</td>
     <td>6 PM</td>
     <td>6 PM</td>
+    <td>6 PM</td>
+
   </tr>
   <tr>
     <td>7 PM</td>
@@ -131,6 +268,9 @@ table td.highlighted {
     <td>7 PM</td>
     <td>7 PM</td>
     <td>7 PM</td>
+    <td>7 PM</td>
+    <td>7 PM</td>
+
   </tr>
   <tr>
     <td>8 PM</td>
@@ -138,6 +278,9 @@ table td.highlighted {
     <td>8 PM</td>
     <td>8 PM</td>
     <td>8 PM</td>
+    <td>8 PM</td>
+    <td>8 PM</td>
+
   </tr>
   <tr>
     <td>9 PM</td>
@@ -145,6 +288,9 @@ table td.highlighted {
     <td>9 PM</td>
     <td>9 PM</td>
     <td>9 PM</td>
+    <td>9 PM</td>
+    <td>9 PM</td>
+
   </tr>
   <tr>
     <td>10 PM</td>
@@ -152,6 +298,9 @@ table td.highlighted {
     <td>10 PM</td>
     <td>10 PM</td>
     <td>10 PM</td>
+    <td>10 PM</td>
+    <td>10 PM</td>
+
   </tr>
   <tr>
     <td>11 PM</td>
@@ -159,45 +308,14 @@ table td.highlighted {
     <td>11 PM</td>
     <td>11 PM</td>
     <td>11 PM</td>
+    <td>11 PM</td>
+    <td>11 PM</td>
+
   </tr>
-  <tr>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-  </tr>
-  <tr>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-  </tr>
-  <tr>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-  </tr>
-  <tr>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-  </tr>
-  <tr>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-  </tr>
+</tbody>
 
 </table>​
- <button type="submit" class="btn btn-primary pull-right"">Go &raquo;</button>
+ <button id="go" type="submit" class="btn pull-right"">Go &raquo;</button>
 
 {% endblock %}
 
@@ -208,7 +326,7 @@ table td.highlighted {
   $(window).load(function(){
   $(function () {
   var isMouseDown = false;
-  $("#our_table td")
+  $("#meme td")
   .mousedown(function () {
   isMouseDown = true;
   $(this).toggleClass("highlighted");
@@ -227,4 +345,53 @@ table td.highlighted {
   });//]]>
 
   </script>
+
+<script type="text/javascript">
+$(function() {
+  var $table = $("#meme"),
+      $headerCells = $table.find("thead th"),
+      $rows = $table.find("tbody tr");
+
+  var headers = [],
+      rows = [],
+      highlightedRows = []
+  $headerCells.each(function(k,v) {
+     headers[headers.length] = $(this).text();
+  });
+  
+  $rows.each(function(row,v) {
+    $(this).find("td").each(function(cell,v) {
+      if (typeof rows[cell] === 'undefined') rows[cell] = [];
+      rows[cell][row] = $(this).text();
+    });
+  });
+
+
+  console.log(headers);
+  console.log(rows[0]);
+  console.log(rows);
+
+});
+
+$("#go").click(function() {
+  highlighted = [];
+  highlighted.push($(".highlighted:nth-child(1)"));
+  highlighted.push($(".highlighted:nth-child(2)"));
+  highlighted.push($(".highlighted:nth-child(3)"));
+  highlighted.push($(".highlighted:nth-child(4)"));
+  highlighted.push($(".highlighted:nth-child(5)"));
+  highlighted.push($(".highlighted:nth-child(6)"));
+  highlighted.push($(".highlighted:nth-child(7)"));
+  console.log(highlighted);
+
+  $("#meme td").each(function() {
+  $(this).addClass("cellWhite");
+  isMouseDown = true;
+  });
+
+});
+ </script>
+
+
+
 {% endblock %}
