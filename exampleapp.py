@@ -13,7 +13,7 @@ from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 import requests
 from flask import Flask, session, request, redirect, render_template, url_for
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 requests = requests.session()
@@ -181,6 +181,19 @@ def get_token(relative_url):
     #     token = parse_qs(r.content).get('access_token')
 
     #    return token
+
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(db.Integer)
+    event_id = db.Column(db.Integer)
+    available = db.Column(db.String)
+
+class Vote(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    category = db.relationship('Event',
+        backref=db.backref('votes', lazy='dynamic'))
+    vote = db.Column(db.String)
 
 def auth_redirect(relative_url):
     return redirect('https://www.facebook.com/dialog/oauth?'
