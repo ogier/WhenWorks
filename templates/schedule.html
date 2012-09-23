@@ -41,8 +41,9 @@ table td.highlighted {
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Facebook Events</li>
-              <li><a href="#">Event 1</a></li>
-              <li><a href="#">Event 2</a></li>
+              {% for event in events %}
+                <li><a href="#{{ event.id }}">{{ event.name }}</a></li>
+              {% endfor %}
               <li class="nav-header">Create an Event</li>
               <li><input class=span10 type="text" placeholder="Name"></li>
               <li><input class=span10 type="text" placeholder="Location"></li>
@@ -315,7 +316,7 @@ table td.highlighted {
 </tbody>
 
 </table>​
- <button id="go" type="submit" class="btn pull-right"">Go &raquo;</button>
+ <button id="go" type="submit" class="btn pull-right">Go &raquo;</button>
 
 {% endblock %}
 
@@ -324,24 +325,29 @@ table td.highlighted {
   <script type="text/javascript">
         //<![CDATA[
   $(window).load(function(){
-  $(function () {
-  var isMouseDown = false;
-  $("#meme td")
-  .mousedown(function () {
-  isMouseDown = true;
-  $(this).toggleClass("highlighted");
-  return false; // prevent text selection
-  })
-  .mouseover(function () {
-  if (isMouseDown) {
-  $(this).toggleClass("highlighted");
-  }
-  });
-  $(document)
-  .mouseup(function () {
-  isMouseDown = false;
-  });
-  });
+    $(function () {
+      var isMouseDown = false;
+      var togglingOn = true;
+
+      $("#meme td")
+      .mousedown(function () {
+        if (!$(this).hasClass("cellWhite")) {
+          isMouseDown = true;
+          togglingOn = !$(this).hasClass("highlighted");
+          $(this).toggleClass("highlighted", togglingOn);
+        }
+        return false; // prevent text selection
+      })
+      .mouseover(function () {
+        if (isMouseDown) {
+          $(this).toggleClass("highlighted", togglingOn);
+        }
+      });
+
+      $(document).mouseup(function () {
+        isMouseDown = false;
+      });
+    });
   });//]]>
 
   </script>
@@ -383,15 +389,7 @@ $("#go").click(function() {
   highlighted.push($(".highlighted:nth-child(6)"));
   highlighted.push($(".highlighted:nth-child(7)"));
   console.log(highlighted);
-
-  $("#meme td").each(function() {
-  $(this).addClass("cellWhite");
-  isMouseDown = true;
-  });
-
 });
  </script>
-
-
 
 {% endblock %}

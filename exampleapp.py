@@ -111,6 +111,7 @@ def fql(fql, token, args=None):
 def fb_call(call, args=None):
     url = "https://graph.facebook.com/{0}".format(call)
     r = requests.get(url, params=args)
+    # print r.url, r.status_code, r.content, args['access_token']
     return json.loads(r.content)
 
 
@@ -121,77 +122,99 @@ app.config.from_object('conf.Config')
 app.secret_key = SECRET_KEY
 
 
-def get_token():
+def get_token(relative_url):
+    access_token = session.get('access_token', None)
 
-    if request.args.get('code', None):
-        return fbapi_auth(request.args.get('code'))[0]
-
-    cookie_key = 'fbsr_{0}'.format(FB_APP_ID)
-
-    if cookie_key in request.cookies:
-
-        c = request.cookies.get(cookie_key)
-        encoded_data = c.split('.', 2)
-
-        sig = encoded_data[0]
-        data = json.loads(urlsafe_b64decode(str(encoded_data[1])))
-
-        if not data['algorithm'].upper() == 'HMAC-SHA256':
-            raise ValueError('unknown algorithm {0}'.format(data['algorithm']))
-
-        h = hmac.new(FB_APP_SECRET, digestmod=hashlib.sha256)
-        h.update(encoded_data[1])
-        expected_sig = urlsafe_b64encode(h.digest()).replace('=', '')
-
-        if sig != expected_sig:
-            raise ValueError('bad signature')
-
-        code =  data['code']
-
+    if not access_token and 'code' in request.args:
         params = {
             'client_id': FB_APP_ID,
             'client_secret': FB_APP_SECRET,
-            'redirect_uri': '',
-            'code': data['code']
+            'redirect_uri': request.url_root.rstrip('/') + relative_url,
+            'code': request.args['code']
         }
 
         from urlparse import parse_qs
         r = requests.get('https://graph.facebook.com/oauth/access_token', params=params)
-        token = parse_qs(r.content).get('access_token')
+        access_token = parse_qs(r.content)['access_token'][0]
+        session['access_token'] = access_token
 
-        return token
+    perms = fb_call('me/permissions',
+                    args={'access_token': access_token})
+    if perms['data'][0].get('user_events', None):
+        return access_token
 
+    return False
+
+    # cookie_key = 'fbsr_{0}'.format(FB_APP_ID)
+
+    # if cookie_key in request.cookies:
+
+    #     c = request.cookies.get(cookie_key)
+    #     encoded_data = c.split('.', 2)
+
+    #     sig = encoded_data[0]
+    #     data = json.loads(urlsafe_b64decode(str(encoded_data[1])))
+
+    #     if not data['algorithm'].upper() == 'HMAC-SHA256':
+    #         raise ValueError('unknown algorithm {0}'.format(data['algorithm']))
+
+    #     h = hmac.new(FB_APP_SECRET, digestmod=hashlib.sha256)
+    #     h.update(encoded_data[1])
+    #     expected_sig = urlsafe_b64encode(h.digest()).replace('=', '')
+
+    #     if sig != expected_sig:
+    #         raise ValueError('bad signature')
+
+    #     code =  data['code']
+
+    #     params = {
+    #         'client_id': FB_APP_ID,
+    #         'client_secret': FB_APP_SECRET,
+    #         'redirect_uri': '',
+    #         'code': data['code']
+    #     }
+
+    #     from urlparse import parse_qs
+    #     r = requests.get('https://graph.facebook.com/oauth/access_token', params=params)
+    #     token = parse_qs(r.content).get('access_token')
+
+    #    return token
+
+def auth_redirect(relative_url):
+    return redirect('https://www.facebook.com/dialog/oauth?'
+                    'client_id=%s'
+                    '&redirect_uri=%s'
+                    '&scope=user_events,create_event'
+                    % (FB_APP_ID, request.url_root.rstrip('/') + relative_url))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     access_token = get_token()
-    channel_url = url_for('get_channel', _external=True)
-    channel_url = channel_url.replace('http:', '').replace('https:', '')
 
     if access_token:
 
         me = fb_call('me', args={'access_token': access_token})
-        fb_app = fb_call(FB_APP_ID, args={'access_token': access_token})
-        likes = fb_call('me/likes',
-                        args={'access_token': access_token, 'limit': 4})
-        friends = fb_call('me/friends',
-                          args={'access_token': access_token, 'limit': 4})
-        photos = fb_call('me/photos',
-                         args={'access_token': access_token, 'limit': 16})
+        # fb_app = fb_call(FB_APP_ID, args={'access_token': access_token})
+        # likes = fb_call('me/likes',
+        #                 args={'access_token': access_token, 'limit': 4})
+        # friends = fb_call('me/friends',
+        #                   args={'access_token': access_token, 'limit': 4})
+        # photos = fb_call('me/photos',
+        #                  args={'access_token': access_token, 'limit': 16})
 
-        redir = request.url_root + 'close/'
-        POST_TO_WALL = ("https://www.facebook.com/dialog/feed?redirect_uri=%s&"
-                        "display=popup&app_id=%s" % (redir, FB_APP_ID))
+        # redir = request.url_root + 'close/'
+        # POST_TO_WALL = ("https://www.facebook.com/dialog/feed?redirect_uri=%s&"
+        #                 "display=popup&app_id=%s" % (redir, FB_APP_ID))
 
-        app_friends = fql(
-            "SELECT uid, name, is_app_user, pic_square "
-            "FROM user "
-            "WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND "
-            "  is_app_user = 1", access_token)
+        # app_friends = fql(
+        #     "SELECT uid, name, is_app_user, pic_square "
+        #     "FROM user "
+        #     "WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND "
+        #     "  is_app_user = 1", access_token)
 
-        SEND_TO = ('https://www.facebook.com/dialog/send?'
-                   'redirect_uri=%s&display=popup&app_id=%s&link=%s'
-                   % (redir, FB_APP_ID, request.url_root))
+        # SEND_TO = ('https://www.facebook.com/dialog/send?'
+        #            'redirect_uri=%s&display=popup&app_id=%s&link=%s'
+        #            % (redir, FB_APP_ID, request.url_root))
 
         url = request.url
 
@@ -211,7 +234,9 @@ def authenticate():
     if request.args.get('error') == 'access_denied':
         return redirect(request.url_root)
 
-    access_token, expires = fbapi_auth(request.args.get('code'))
+    access_token = get_token()
+    if not access_token:
+        return auth_redirect(url_for('auth'))
     me = fb_call('me', args={'access_token': access_token})
     session['user.id'] = int(me['id'])
     return redirect(request.url_root + 'create/')
@@ -219,14 +244,15 @@ def authenticate():
 
 @app.route('/create/', methods=['GET', 'POST'])
 def create():
-    if 'user.id' not in session:
-        state = base64_url_encode(os.urandom(20))
-        session['oauth.state'] = state
-        return redirect('https://www.facebook.com/dialog/oauth?'
-                        'client_id=%s'
-                        '&redirect_uri=%s'
-                        '&state=%s'
-                        % (FB_APP_ID, request.url_root + 'auth/', state))
+    access_token = get_token(url_for('create'))
+    if not access_token:
+        return auth_redirect(url_for('create'))
+
+    events = fb_call('me/events',
+                     args={'access_token': access_token})
+
+    return render_template('schedule.html', title='Schedule an event', events=events['data'])
+
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
