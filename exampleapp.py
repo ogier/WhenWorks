@@ -84,11 +84,11 @@ def get_token(relative_url):
 
     return False
 
-def auth_redirect(relative_url):
+def auth_redirect(relative_url, extra_scope=''):
     return redirect('https://www.facebook.com/dialog/oauth?'
                     'client_id=%s'
                     '&redirect_uri=%s'
-                    '&scope=user_events'
+                    '&scope=user_events,' + extra_scope
                     % (FB_APP_ID, request.url_root.rstrip('/') + relative_url))
 
 
@@ -183,13 +183,33 @@ def vote(event_id):
                 used_times[i]=True
     return render_template('schedule.html', title='Schedule an event',
                             #events=events['data'],
-                            event_id=event.id,
-                            appid=app.config['FB_APP_ID'],
+                            publish_url=url_for('publish', event_id=event_id),
                             days=days(),
                             times=times, used_times=used_times,
                             available=available, usersbytime=usersbytime,
                             users=users,
                             results=results, top=top or 1)
+
+
+@app.route('/publish/<int:event_id>/', methods=['GET', 'POST'])
+def publish(event_id):
+    access_token = get_token(url_for('publish', event_id=event_id))
+    if not access_token:
+        return auth_redirect(url_for('publish', event_id=event_id), 'publish_stream')
+    if 'code' in request.args:
+        return redirect(url_for('publish', event_id=event_id))
+
+    event = Event.query.filter_by(id=event_id).first()
+
+    if request.method == 'POST':
+        message = request.form['message']
+        fb_call(str(event.id) + '/feed',
+                args={'access_token': access_token,
+                      'link': request.url,
+                      'message': message})
+        return redirect(url_for('vote', event_id=event_id))
+
+    return render_template('publish.html', title='Post on the event wall')
 
 
 @app.route('/channel.html', methods=['GET', 'POST'])
