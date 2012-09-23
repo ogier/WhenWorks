@@ -185,8 +185,8 @@ def get_token(relative_url):
 class Event(db.Model):
     __tablename__ = 'event'
     id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer)
-    event_id = db.Column(db.Integer)
+    author_id = db.Column(db.BigInteger)
+    event_id = db.Column(db.BigInteger)
     available = db.Column(db.String)
     votes = db.relationship('Vote')
 
@@ -198,7 +198,7 @@ class Event(db.Model):
 class Vote(db.Model):
     __tablename__ = 'vote'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.BigInteger)
     event = db.Column(db.Integer, db.ForeignKey('event.id'))
     vote = db.Column(db.String)
 
