@@ -68,7 +68,7 @@ def fbapi_get_string(path,
 
 def fbapi_auth(code):
     params = {'client_id': app.config['FB_APP_ID'],
-              'redirect_uri': request.url_root,
+              'redirect_uri': request.url_root + 'auth/',
               'client_secret': app.config['FB_APP_SECRET'],
               'code': code}
 
@@ -211,14 +211,14 @@ def authenticate():
     if request.args.get('error') == 'access_denied':
         return redirect(request.url_root)
 
-    token, expires = fbapi_auth(request.args.get('code'))
+    access_token, expires = fbapi_auth(request.args.get('code'))
     me = fb_call('me', args={'access_token': access_token})
-    return render_template('schedule.html', title=me.name)
+    session['user.id'] = int(me['id'])
+    return redirect(request.url_root + 'create/')
 
 
 @app.route('/create/', methods=['GET', 'POST'])
 def create():
-    print "sitenrienseirnteirnstien"
     if 'user.id' not in session:
         state = base64_url_encode(os.urandom(20))
         session['oauth.state'] = state
