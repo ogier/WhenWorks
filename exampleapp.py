@@ -68,7 +68,7 @@ def get_token(relative_url):
         params = {
             'client_id': FB_APP_ID,
             'client_secret': FB_APP_SECRET,
-            'redirect_uri': request.url_root.rstrip('/').replace('http://','https://') + relative_url,
+            'redirect_uri': request.url_root.rstrip('/') + relative_url,
             'code': request.args['code']
         }
 
@@ -77,17 +77,18 @@ def get_token(relative_url):
         access_token = parse_qs(r.content)['access_token'][0]
         session['access_token'] = access_token
 
-    perms = fb_call('me/permissions',
-                    args={'access_token': access_token})
-    if 'data' in perms and perms['data'][0].get('user_events', None):
-        return access_token
+#    perms = fb_call('me/permissions',
+#                    args={'access_token': access_token})
+#    if 'data' in perms and perms['data'][0].get('user_events', None):
+#        return access_token
 
-    return False
+    return access_token
 
 def auth_redirect(relative_url):
     return redirect('https://www.facebook.com/dialog/oauth?'
                     'client_id=%s'
                     '&redirect_uri=%s'
+                    '&scope=user_events'
                     % (FB_APP_ID, request.url_root.rstrip('/') + relative_url))
 
 
