@@ -130,7 +130,7 @@ def create():
     events = fb_call('me/events',
                      args={'access_token': access_token})
 
-    return render_template('schedule.html', title='Schedule an event',
+    return render_template('schedule.html', title='When Works',
                             events=events['data'],
                             days=days(), times=times)
 

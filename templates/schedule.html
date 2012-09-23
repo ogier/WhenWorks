@@ -80,15 +80,17 @@ table td.highlight4.highlighted {
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
+            {% if events %}
             <ul class="nav nav-list" id="fb-event-list">
-              {% if events %}
               <li class="nav-header">Your Facebook Events</li>
               {% for event in events %}
-                <li><a href="#" data-id="{{ event.id }}">{{ event.name }}</a></li>
+              <li class=""><a href="#" data-id="{{ event.id }}">{{ event.name }}</a></li>
               {% endfor %}
-              {% endif %}
+            </ul>
+            {% endif %}
 
-              {% if users %}
+            {% if results %}
+            <ul class="nav nav-list">
               <li class="nav-header">Friends Who Voted</li>
               {% for id, name in users %}
               <li class="profile profile-{{ id }}">
@@ -97,9 +99,11 @@ table td.highlight4.highlighted {
                   {{ name }}
                 </a>
               </li>
+              {% else %}
+              <li>None yet :(</li>
               {% endfor %}
-              {% endif %}
             </ul>
+            {% endif %}
           </div><!--/.well -->
         </div><!--/span-->
 <table cellpadding="0" cellspacing="0" id="meme">
@@ -112,7 +116,7 @@ table td.highlight4.highlighted {
 </thead>
 <tbody>
   {% for time in times %}
-  {% if usedtimes and not usedtimes[loop.index0] %}
+  {% if used_times and not used_times[loop.index0] %}
   <tr></tr>
   {% else %}
   <tr>
@@ -144,7 +148,9 @@ table td.highlight4.highlighted {
 <form method="POST" id="create-form">
   <input type="hidden" name="fb-event-id" id="fb-event-id"/>
   <input type="hidden" name="fb-times" id="fb-times"/>
-  <input id="go" type="submit" class="btn pull-right" name="submit" value="Go &raquo;"/>
+  <input id="go" type="submit" class="btn pull-right" name="submit"
+  {% if events %}disabled="disabled" value="Choose an Event First"
+  {% else %}value="Vote &raquo;"{% endif %}/>
 </form>
 
 {% endblock %}
@@ -195,6 +201,10 @@ $(function() {
   $("#fb-event-list a").click(function() {
     var id = $(this).data('id');
     $("#fb-event-id").val(id);
+    $("#go").removeAttr("disabled").val("Go »");
+
+    $("#fb-event-list li").removeClass("active");
+    $(this).parent("li").addClass("active");
     return false;
   })
 
