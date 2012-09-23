@@ -176,10 +176,10 @@ def vote(event_id):
     votejson = [json.loads(vote.vote) for vote in votes]
     results, usersbytime, top = aggregate_votes(votejson, users)
 
-    re = request.url_root.rstrip('/') + url_for('vote', event_id=event_id)
-    url = ('http://www.facebook.com/dialog/send?app_id=' + app.config['FB_APP_ID'] +
-          '&redirect_uri=' + re +
-          '&link=' + re)
+    #re = request.url_root.rstrip('/') + url_for('vote', event_id=event_id)
+    url = ('http://www.facebook.com/dialog/send?app_id=' + app.config['FB_APP_ID']
+    #      '&redirect_uri=' + re +
+    #      '&link=' + re)
 
     used_times = [False]*24
     for i in xrange(24):
