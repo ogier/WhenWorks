@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import base64
 import os
 import os.path
@@ -10,7 +12,7 @@ import hashlib
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 import requests
-from flask import Flask, request, redirect, render_template, url_for
+from flask import Flask, session, request, redirect, render_template, url_for
 
 FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 requests = requests.session()
@@ -18,6 +20,8 @@ requests = requests.session()
 app_url = 'https://graph.facebook.com/{0}'.format(FB_APP_ID)
 FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
 FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
 def oauth_login_url(preserve_path=True, next_url=None):
@@ -112,6 +116,7 @@ def fb_call(call, args=None):
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_object('conf.Config')
+app.secret_key = SECRET_KEY
 
 
 def get_home():
@@ -204,9 +209,28 @@ def index():
         #return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME)
         return render_template('whentomeet.html')
 
-@app.route('/schedule/', methods=['GET', 'POST'])
-def schedule():
-    return render_template('schedule.html')
+@app.route('/auth/', methods=['GET'])
+def authenticate():
+    if session.get('oauth.state') != request.args.get('state'):
+        abort(401)
+    if request.args.get('error') == 'access_denied':
+        return redirect(get_home())
+
+    token, expires = fbapi_auth(request.args.get('code'))
+    me = fb_call('me', args={'access_token': access_token})
+    return render_template('schedule.html', title=me.name)
+
+
+@app.route('/create/', methods=['GET', 'POST'])
+def create():
+    if 'user.id' not in session:
+        state = base64_url_encode(os.urandom(20))
+        session['oauth.state'] = state
+        return redirect('https://www.facebook.com/dialog/oauth?'
+                        'client_id=%s'
+                        '&redirect_uri=%s'
+                        '&state=%s'
+                        % (FB_APP_ID, get_home() + 'auth/', state))
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
@@ -219,7 +243,17 @@ def close():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    if app.config.get('FB_APP_ID') and app.config.get('FB_APP_SECRET'):
+
+    configured = True
+    def require(conf):
+        if not app.config.get(conf):
+            print ('Cannot start application without %s set' % conf)
+            configured = False
+    require('SECRET_KEY')
+    require('FB_APP_ID')
+    require('FB_APP_SECRET')
+
+    if configured:
         app.run(host='0.0.0.0', port=port)
     else:
-        print 'Cannot start application without Facebook App Id and Secret set'
+        exit(1)

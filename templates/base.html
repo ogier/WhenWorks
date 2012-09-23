@@ -32,7 +32,7 @@
     <meta property="og:image" content="When Works" />
     <meta property="og:site_name" content="When Works" />
     <meta property="og:description" content="Find out when is the best time for your event." />
-    <meta content="{{app_id}}" property="fb:app_id" />
+    <meta property="fb:app_id" content="{{app_id}}" />
 
     <script type="text/javascript" src="/static/jquery-1.7.1.min.js"></script>
     <script type="text/javascript">
@@ -127,6 +127,9 @@
         </div>
         {% endblock %}
       </header>
+
+      <div id="fb-root"></div>
+
       {% block content %}
       {% endblock %}
 
