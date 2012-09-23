@@ -88,7 +88,6 @@ def auth_redirect(relative_url):
     return redirect('https://www.facebook.com/dialog/oauth?'
                     'client_id=%s'
                     '&redirect_uri=%s'
-                    '&scope=user_events'
                     % (FB_APP_ID, request.url_root.rstrip('/') + relative_url))
 
 
