@@ -183,7 +183,8 @@ def vote(event_id):
                 used_times[i]=True
     return render_template('schedule.html', title='Schedule an event',
                             #events=events['data'],
-                            event_id=event_id,
+                            event_id=event.id,
+                            appid=app.config['FB_APP_ID'],
                             days=days(),
                             times=times, used_times=used_times,
                             available=available, usersbytime=usersbytime,

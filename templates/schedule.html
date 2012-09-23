@@ -91,6 +91,13 @@ table td.highlight4.highlighted {
 
             {% if results %}
             <ul class="nav nav-list">
+              <li class="nav-header">Post to the Event</li>
+              <li><textarea id="publish-message">Help me decide when is the best time for this event! Follow the link to vote on when works for you.</textarea></li>
+              <li><a href="{{ url }}">{{ url }}</a></li>
+              <li><a href="#" id="publish-to-event" class="btn btn-primary"
+                     data-event-id="{{ event_id }}">
+                Post it &raquo;
+              </a></li>
               <li class="nav-header">Friends Who Voted</li>
               {% for id, name in users %}
               <li class="profile profile-{{ id }}">
@@ -232,6 +239,23 @@ $(function() {
     });
 
     $("#fb-times").val(JSON.stringify(days));
+  });
+
+  $("#publish-to-event").click(function (e) {
+    e.preventDefault();
+
+    window.location = "http://www.facebook.com/dialog/send?app_id={{ appid }}" +
+                      "&name=People%20Argue%20Just%20to%20Win" +
+                      "&to={{ event_id }}" +
+                      "&link=" + window.location +
+                      "&redirect_uri=" + window.location;
+    FB.login(function (r) {
+      if (r.authResponse) {
+        var event_id = $("#publish-to-event").data('eventId');
+        FB.api('/' + event_id + '/feed', 'post',
+          { link: window.location, message: $("#publish-message").text() });
+      }
+    }, { 'scope': 'publish_stream' });
   });
 
 });
