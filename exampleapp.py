@@ -143,7 +143,6 @@ def get_token(relative_url):
     if 'data' in perms and perms['data'][0].get('user_events', None):
         return access_token
 
-    del session['access_token']
     return False
 
     # cookie_key = 'fbsr_{0}'.format(FB_APP_ID)
