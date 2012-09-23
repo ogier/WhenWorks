@@ -120,7 +120,7 @@ $(function() {
     return false; // prevent text selection
   })
   .mouseover(function () {
-    if (isMouseDown) {
+    if (isMouseDown && !$(this).hasClass("cellWhite")) {
       $(this).toggleClass("highlighted", togglingOn);
     }
   });
@@ -137,19 +137,8 @@ $(function() {
   })
 
   $("#create-form").submit(function(e) {
-    e.preventDefault();
-    // highlighted = [];
-    // console.log($(".highlighted:nth-child(1)").map(function(i,v){$(v).text()}));
-    // highlighted.push($(".highlighted:nth-child(1)").map(function(i,v){$(v).text()}));
-    // highlighted.push($(".highlighted:nth-child(2)").map(function(i,v){$(v).text()}));
-    // highlighted.push($(".highlighted:nth-child(3)").map(function(i,v){$(v).text()}));
-    // highlighted.push($(".highlighted:nth-child(4)").map(function(i,v){$(v).text()}));
-    // highlighted.push($(".highlighted:nth-child(5)").map(function(i,v){$(v).text()}));
-    // highlighted.push($(".highlighted:nth-child(6)").map(function(i,v){$(v).text()}));
-    // highlighted.push($(".highlighted:nth-child(7)").map(function(i,v){$(v).text()}));
-    // console.log(highlighted);
-    // console.log(JSON.stringify(highlighted));
-
+    // e.preventDefault();
+    
     var $table = $("#meme"),
         $rows = $table.find("tbody tr");
 

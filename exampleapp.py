@@ -257,7 +257,7 @@ def create():
     if request.method == 'POST':
         event_id = int(request.form['fb-event-id'])
         times = json.loads(request.form['fb-times'])
-        return redirect(url_for('vote', event_id))
+        return redirect(url_for('vote', event_id=event_id))
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
@@ -269,11 +269,11 @@ def create():
 
 @app.route('/vote/<int:event_id>/', methods=['GET', 'POST'])
 def vote(event_id):
-    access_token = get_token(url_for('vote', event_id))
+    access_token = get_token(url_for('vote', event_id=event_id))
     if not access_token:
-        return auth_redirect(url_for('vote', event_id))
+        return auth_redirect(url_for('vote', event_id=event_id))
     if 'code' in request.args:
-        return redirect(url_for('vote', event_id))
+        return redirect(url_for('vote', event_id=event_id))
 
     events = fb_call('me/events',
                      args={'access_token': access_token})
@@ -284,6 +284,7 @@ def vote(event_id):
     available = [[],[6],[5,6],[3,4,5,6,7,8,9,10,11,12,13],[2,3,4,5,6,7,11,12,13],[1,2,11,12],[]]
     return render_template('schedule.html', title='Schedule an event',
                             events=events['data'],
+                            event_id=event_id,
                             days=days, times=times,
                             available=available)
 
