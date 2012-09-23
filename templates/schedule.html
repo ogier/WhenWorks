@@ -78,9 +78,7 @@ table td.highlighted {
   <tr>
     {% set outer_loop = loop %}
     {% for day in days %}
-      {% if not usedtimes[loop.index0] %}
-        <td class="shrinkCell cellWhite"><td>
-      {% elif available and outer_loop.index0 not in available[loop.index0] %}
+      {% if available and outer_loop.index0 not in available[loop.index0] %}
         <td class="cellWhite">{{ time }}</td>
       {% else %}
         <td>{{ time }}</td>
@@ -170,6 +168,8 @@ $(function() {
   });
 
 });
+
+
 
 
 
