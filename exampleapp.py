@@ -176,6 +176,11 @@ def vote(event_id):
     votejson = [json.loads(vote.vote) for vote in votes]
     results, usersbytime, top = aggregate_votes(votejson, users)
 
+    re = request.url_root.rstrip('/') + url_for('vote', event_id=event_id)
+    url = ('http://www.facebook.com/dialog/send?app_id=' + app.config['FB_APP_ID'] +
+          '&redirect_uri=' + re +
+          '&link=' + re)
+
     used_times = [False]*24
     for i in xrange(24):
         for l in available:
@@ -183,7 +188,7 @@ def vote(event_id):
                 used_times[i]=True
     return render_template('schedule.html', title='Schedule an event',
                             #events=events['data'],
-                            publish_url=url_for('publish', event_id=event_id),
+                            publish_url=url,
                             days=days(),
                             times=times, used_times=used_times,
                             available=available, usersbytime=usersbytime,
