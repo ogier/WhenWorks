@@ -20,11 +20,14 @@ table td {
   vertical-align:middle;
   background-color:#ccc;
   border:1px solid #fff;
+  cursor:pointer;
+  cursor:hand;
 }
-.cellWhite
+table td.cellWhite
 {
 color: white;
 background-color: White;
+cursor:default;
 }
 
 .shrinkCell
@@ -33,9 +36,42 @@ background-color: White;
 }
 
 
+table td.highlight1 {
+  background-color:#C2EBC0;
+}
+table td.highlight2 {
+  background-color:#A9DEA6;
+}
+table td.highlight3 {
+  background-color:#80CC7C;
+}
+table td.highlight4 {
+  background-color:#4FB34B;
+}
 table td.highlighted {
-  background-color:#999;
-}​
+  background-color:#7E94D6;
+}
+table td.highlight1.highlighted {
+  background-color:#7E94D6;
+}
+table td.highlight2.highlighted {
+  background-color:#7E94D6;
+}
+table td.highlight3.highlighted {
+  background-color:#7E94D6;
+}
+table td.highlight4.highlighted {
+  background-color:#7E94D6;
+}
+
+.profile img {
+  padding-right: 10px;
+}
+.profile.faded {
+  opacity:.5;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}
 </style>
 {% endblock %}
 
@@ -45,31 +81,32 @@ table td.highlighted {
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list" id="fb-event-list">
+              {% if events %}
               <li class="nav-header">Your Facebook Events</li>
               {% for event in events %}
                 <li><a href="#" data-id="{{ event.id }}">{{ event.name }}</a></li>
               {% endfor %}
-              <li class="nav-header">Create an Event</li>
-              <li><input class=span10 type="text" placeholder="Name"></li>
-              <li><input class=span10 type="text" placeholder="Location"></li>
+              {% endif %}
 
-              <!--
-              <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown">Privacy Settings <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Open</a></li>
-                  <li><a href="#">Secret</a></li>
-                  <li><a href="#">Friends</a></li>
+              {% if users %}
+              <li class="nav-header">Friends Who Voted</li>
+              {% for id, name in users %}
+              <li class="profile profile-{{ id }}">
+                <a href="https://www.facebook.com/{{ id }}">
+                  <img src="https://graph.facebook.com/{{ id }}/picture?type=square">
+                  {{ name }}
+                </a>
+              </li>
+              {% endfor %}
+              {% endif %}
             </ul>
--->
-
           </div><!--/.well -->
         </div><!--/span-->
 <table cellpadding="0" cellspacing="0" id="meme">
 <thead>
   <tr>
     {% for day in days %}
-    <th>{{ day }}</th>
+    <th>{{ day|safe }}</th>
     {% endfor %}
   </tr>
 </thead>
@@ -84,7 +121,18 @@ table td.highlighted {
       {% if available and outer_loop.index0 not in available[loop.index0] %}
         <td class="cellWhite">{{ time }}</td>
       {% else %}
-        <td>{{ time }}</td>
+        {% if results %}
+        {% set count = results[loop.index0][outer_loop.index0] %}
+        <td data-count="{{ count }}"
+            data-userids="[{{ usersbytime[loop.index0][outer_loop.index0]|join(',') }}]"
+            class="{% if count / top > 0.75 %}highlight4
+                   {% elif count / top > 0.5 %}highlight3
+                   {% elif count / top > 0.25 %}highlight2
+                   {% elif count / top > 0 %}highlight1
+                   {% endif %}">{{ time }}</td>
+        {% else %}
+          <td>{{ time }}</td>
+        {% endif %}
       {% endif %}
     {% endfor %}
   </tr>
@@ -92,7 +140,7 @@ table td.highlighted {
   {% endfor %}
 </tbody>
 
-</table>​
+</table>
 <form method="POST" id="create-form">
   <input type="hidden" name="fb-event-id" id="fb-event-id"/>
   <input type="hidden" name="fb-times" id="fb-times"/>
@@ -119,9 +167,25 @@ $(function() {
     return false; // prevent text selection
   })
   .mouseover(function () {
-    if (isMouseDown && !$(this).hasClass("cellWhite")) {
-      $(this).toggleClass("highlighted", togglingOn);
+    if (!$(this).hasClass("cellWhite")) {
+      if (isMouseDown) {
+        $(this).toggleClass("highlighted", togglingOn);
+      }
+      $('.profile').addClass('faded');
+      $.each($(this).data('userids'), function (i, userid) {
+        $('.profile-'+userid).removeClass('faded');
+      });
     }
+    if ($(this).data('count')) {
+      $(this).data('time', $(this).text());
+      $(this).text($(this).data('count'));
+    }
+  })
+  .mouseout(function () {
+    if ($(this).data('time')) {
+      $(this).text($(this).data('time'));
+    }
+    $('.profile').removeClass('faded');
   });
 
   $(document).mouseup(function () {
@@ -130,7 +194,6 @@ $(function() {
 
   $("#fb-event-list a").click(function() {
     var id = $(this).data('id');
-    console.log(id);
     $("#fb-event-id").val(id);
     return false;
   })

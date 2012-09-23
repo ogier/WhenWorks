@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+import datetime
 import os
 import json
 
@@ -49,11 +50,13 @@ class Vote(db.Model):
     __tablename__ = 'vote'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.BigInteger)
+    user_name = db.Column(db.String(80))
     event = db.Column(db.Integer, db.ForeignKey('event.id'))
     vote = db.Column(db.String)
 
-    def __init__(self, user_id, event, vote):
+    def __init__(self, user_id, user_name, event, vote):
         self.user_id = user_id
+        self.user_name = user_name
         self.event = event
         self.vote = vote
 
@@ -85,7 +88,7 @@ def auth_redirect(relative_url):
     return redirect('https://www.facebook.com/dialog/oauth?'
                     'client_id=%s'
                     '&redirect_uri=%s'
-                    '&scope=user_events,create_event'
+                    '&scope=user_events'
                     % (FB_APP_ID, request.url_root.rstrip('/') + relative_url))
 
 
@@ -95,7 +98,10 @@ def index():
     return render_template('whentomeet.html')
 
 
-days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+def days():
+    return [(datetime.date.today() + datetime.timedelta(i)).strftime("%A,<br>%b %d")
+            for i in xrange(7)]
+
 times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM",
     "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
     "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM",
@@ -126,7 +132,20 @@ def create():
 
     return render_template('schedule.html', title='Schedule an event',
                             events=events['data'],
-                            days=days, times=times)
+                            days=days(), times=times)
+
+
+def aggregate_votes(votes, user_ids):
+    result = [[0]*24 for i in xrange(7)]
+    usersbytime = [[[] for i in xrange(24)] for j in xrange(7)]
+    top = 0
+    for v, vote in enumerate(votes):
+        for d, day in enumerate(vote):
+            for time in day:
+                usersbytime[d][time].append(user_ids[v][0])
+                result[d][time] += 1
+                top = max(top, result[d][time])
+    return result, usersbytime, float(top)
 
 
 @app.route('/vote/<int:event_id>/', methods=['GET', 'POST'])
@@ -144,13 +163,18 @@ def vote(event_id):
                  args={'access_token': access_token})
 
     if request.method == 'POST':
-        vote = Vote(me['id'], event_id, request.form['fb-times'])
+        vote = Vote(me['id'], me['name'], event_id, request.form['fb-times'])
         db.session.add(vote)
         db.session.commit()
         return redirect(url_for('vote', event_id=event_id))
 
-    events = fb_call('me/events',
-                     args={'access_token': access_token})
+    #events = fb_call('me/events',
+    #                 args={'access_token': access_token})
+
+    votes = Vote.query.filter_by(event=event_id).all()
+    users = [(vote.user_id, vote.user_name) for vote in votes]
+    votejson = [json.loads(vote.vote) for vote in votes]
+    results, usersbytime, top = aggregate_votes(votejson, users)
 
     used_times = [False]*24
     for i in xrange(24):
@@ -158,10 +182,14 @@ def vote(event_id):
             if i in l:
                 used_times[i]=True
     return render_template('schedule.html', title='Schedule an event',
-                            events=events['data'],
+                            #events=events['data'],
                             event_id=event_id,
-                            days=days, times=times,
-                            available=available, used_times=used_times),
+                            days=days(),
+                            times=times, used_times=used_times,
+                            available=available, usersbytime=usersbytime,
+                            users=users,
+                            results=results, top=top or 1)
+
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
@@ -171,6 +199,7 @@ def get_channel():
 @app.route('/close/', methods=['GET', 'POST'])
 def close():
     return render_template('close.html')
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
