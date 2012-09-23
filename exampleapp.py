@@ -68,7 +68,7 @@ def get_token(relative_url):
         params = {
             'client_id': FB_APP_ID,
             'client_secret': FB_APP_SECRET,
-            'redirect_uri': request.url_root.rstrip('/') + relative_url,
+            'redirect_uri': request.url_root.rstrip('/').replace('http://','https://') + relative_url,
             'code': request.args['code']
         }
 
