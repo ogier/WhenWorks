@@ -183,10 +183,12 @@ def get_token(relative_url):
     #    return token
 
 class Event(db.Model):
+    __tablename__ = 'event'
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer)
     event_id = db.Column(db.Integer)
     available = db.Column(db.String)
+    votes = db.relationship('Vote')
 
     def __init__(self, author_id, event_id, available):
         self.author_id = author_id
@@ -194,15 +196,15 @@ class Event(db.Model):
         self.available = available
 
 class Vote(db.Model):
+    __tablename__ = 'vote'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
-    category = db.relationship('Event',
-        backref=db.backref('votes', lazy='dynamic'))
+    event = db.Column(db.Integer, db.ForeignKey('event.id'))
     vote = db.Column(db.String)
 
-    def __init__(self, user_id, category, vote):
+    def __init__(self, user_id, event, vote):
         self.user_id = user_id
-        self.category = category
+        self.event = event
         self.vote = vote
 
 def auth_redirect(relative_url):
