@@ -296,21 +296,21 @@ def vote(event_id):
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     times = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
         "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
-    available = [[],[6],[5,6],[3,4,5,6,7,8,9,10,11,12,13],[2,3,4,5,6,7,11,12,13],[1,2,11,12],[]]
+    available = [[5,6],[6],[5,6],[3,4,5,6,7,8,9,10,11,12,13],[2,3,4,5,6,7,11,12,13],[1,2,11,12],[6,7]]
     used_times = [False]*24
     for i in xrange(24):
         for l in available:
             if i in l:
                 used_times[i]=True
-
     print used_times
 
     return render_template('schedule.html', title='Schedule an event',
                             events=events['data'],
                             event_id=event_id,
                             days=days, times=times,
-                            available=available, usedtimes=used_times),
-
+                            available=available, used_times=used_times),
+    
+    print used_times
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
