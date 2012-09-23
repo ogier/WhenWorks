@@ -177,7 +177,7 @@ def vote(event_id):
     results, usersbytime, top = aggregate_votes(votejson, users)
 
     #re = request.url_root.rstrip('/') + url_for('vote', event_id=event_id)
-    url = ('http://www.facebook.com/dialog/send?app_id=' + app.config['FB_APP_ID']
+    url = ('http://www.facebook.com/dialog/send?app_id=' + app.config['FB_APP_ID'])
     #      '&redirect_uri=' + re +
     #      '&link=' + re)
 
