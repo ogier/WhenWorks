@@ -39,8 +39,8 @@ table td.highlighted {
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header" id="fb-event-list">Your Facebook Events</li>
+            <ul class="nav nav-list" id="fb-event-list">
+              <li class="nav-header">Your Facebook Events</li>
               {% for event in events %}
                 <li><a href="#" data-id="{{ event.id }}">{{ event.name }}</a></li>
               {% endfor %}
@@ -63,256 +63,24 @@ table td.highlighted {
 <table cellpadding="0" cellspacing="0" id="meme">
 <thead>
   <tr>
-<th>Monday</th>
-<th>Tuesday</th>
-<th>Wednesday</th>
-<th>Thursday</th>
-<th>Friday</th>
-<th>Saturday</th>
-<th>Sunday</th>
+    {% for day in days %}
+    <th>{{ day }}</th>
+    {% endfor %}
   </tr>
 </thead>
 <tbody>
-    <tr>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-    <td>12 AM</td>
-
-  </tr>
+  {% for time in times %}
   <tr>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-    <td>1 AM</td>
-
+    {% set outer_loop = loop %}
+    {% for day in days %}
+      {% if available and outer_loop.index0 not in available[loop.index0] %}
+        <td class="cellWhite">{{ time }}</td>
+      {% else %}
+        <td>{{ time }}</td>
+      {% endif %}
+    {% endfor %}
   </tr>
-  <tr>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-    <td>2 AM</td>
-
-  </tr>
-  <tr>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-    <td>3 AM</td>
-
-  </tr>
-  <tr>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-    <td>4 AM</td>
-
-  </tr>
-  <tr>
-    <td>5 AM</td>
-    <td>5 AM</td>
-    <td>5 AM</td>
-    <td>5 AM</td>
-    <td>5 AM</td>
-    <td>5 AM</td>
-    <td>5 AM</td>
-
-  </tr>
-  <tr>
-    <td>6 AM</td>
-    <td>6 AM</td>
-    <td>6 AM</td>
-    <td>6 AM</td>
-    <td>6 AM</td>
-    <td>6 AM</td>
-    <td>6 AM</td>
-
-  </tr>
-  <tr>
-    <td>7 AM</td>
-    <td>7 AM</td>
-    <td>7 AM</td>
-    <td>7 AM</td>
-    <td>7 AM</td>
-    <td>7 AM</td>
-    <td>7 AM</td>
-
-  </tr>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-    <td>8 AM</td>
-
-
-  </tr>
-<tr>
-    <td>9 AM</td>
-    <td>9 AM</td>
-    <td>9 AM</td>
-    <td>9 AM</td>
-    <td>9 AM</td>
-    <td>9 AM</td>
-    <td>9 AM</td>
-
-  </tr>
-<tr>
-    <td>10 AM</td>
-    <td>10 AM</td>
-    <td>10 AM</td>
-    <td>10 AM</td>
-    <td>10 AM</td>
-    <td>10 AM</td>
-    <td>10 AM</td>
-
-  </tr>
-<tr>
-    <td>11 AM</td>
-    <td>11 AM</td>
-    <td>11 AM</td>
-    <td>11 AM</td>
-    <td>11 AM</td>
-    <td>11 AM</td>
-    <td>11 AM</td>
-
-  </tr>
-  <tr>
-    <td>12 PM</td>
-    <td>12 PM</td>
-    <td>12 PM</td>
-    <td>12 PM</td>
-    <td>12 PM</td>
-    <td>12 PM</td>
-    <td>12 PM</td>
-
-  </tr>
-  <tr>
-    <td>1 PM</td>
-    <td>1 PM</td>
-    <td>1 PM</td>
-    <td>1 PM</td>
-    <td>1 PM</td>
-    <td>1 PM</td>
-    <td>1 PM</td>
-
-  </tr>
-  <tr>
-    <td>2 PM</td>
-    <td>2 PM</td>
-    <td>2 PM</td>
-    <td>2 PM</td>
-    <td>2 PM</td>
-    <td>2 PM</td>
-    <td>2 PM</td>
-
-  </tr>
-  <tr>
-    <td>3 PM</td>
-    <td>3 PM</td>
-    <td>3 PM</td>
-    <td>3 PM</td>
-    <td>3 PM</td>
-    <td>3 PM</td>
-    <td>3 PM</td>
-
-  </tr>
-  <tr>
-    <td>4 PM</td>
-    <td>4 PM</td>
-    <td>4 PM</td>
-    <td>4 PM</td>
-    <td>4 PM</td>
-    <td>4 PM</td>
-    <td>4 PM</td>
-
-  </tr>
-  <tr>
-    <td>5 PM</td>
-    <td>5 PM</td>
-    <td>5 PM</td>
-    <td>5 PM</td>
-    <td>5 PM</td>
-    <td>5 PM</td>
-    <td>5 PM</td>
-
-  </tr>
-  <tr>
-    <td >6 PM</td>
-    <td>6 PM</td>
-    <td>6 PM</td>
-    <td>6 PM</td>
-    <td>6 PM</td>
-    <td>6 PM</td>
-    <td>6 PM</td>
-
-  </tr>
-  <tr>
-    <td>7 PM</td>
-    <td>7 PM</td>
-    <td>7 PM</td>
-    <td>7 PM</td>
-    <td>7 PM</td>
-    <td>7 PM</td>
-    <td>7 PM</td>
-
-  </tr>
-  <tr>
-    <td>8 PM</td>
-    <td>8 PM</td>
-    <td>8 PM</td>
-    <td>8 PM</td>
-    <td>8 PM</td>
-    <td>8 PM</td>
-    <td>8 PM</td>
-
-  </tr>
-  <tr>
-    <td>9 PM</td>
-    <td>9 PM</td>
-    <td>9 PM</td>
-    <td>9 PM</td>
-    <td>9 PM</td>
-    <td>9 PM</td>
-    <td>9 PM</td>
-
-  </tr>
-  <tr>
-    <td>10 PM</td>
-    <td>10 PM</td>
-    <td>10 PM</td>
-    <td>10 PM</td>
-    <td>10 PM</td>
-    <td>10 PM</td>
-    <td>10 PM</td>
-
-  </tr>
-  <tr>
-    <td>11 PM</td>
-    <td>11 PM</td>
-    <td>11 PM</td>
-    <td>11 PM</td>
-    <td>11 PM</td>
-    <td>11 PM</td>
-    <td>11 PM</td>
-
-  </tr>
+  {% endfor %}
 </tbody>
 
 </table>​
@@ -330,27 +98,7 @@ table td.highlighted {
         //<![CDATA[
   $(window).load(function(){
     $(function () {
-      var isMouseDown = false;
-      var togglingOn = true;
-
-      $("#meme td")
-      .mousedown(function () {
-        if (!$(this).hasClass("cellWhite")) {
-          isMouseDown = true;
-          togglingOn = !$(this).hasClass("highlighted");
-          $(this).toggleClass("highlighted", togglingOn);
-        }
-        return false; // prevent text selection
-      })
-      .mouseover(function () {
-        if (isMouseDown) {
-          $(this).toggleClass("highlighted", togglingOn);
-        }
-      });
-
-      $(document).mouseup(function () {
-        isMouseDown = false;
-      });
+      
     });
   });//]]>
 
@@ -358,46 +106,73 @@ table td.highlighted {
 
 <script type="text/javascript">
 $(function() {
-  var $table = $("#meme"),
-      $headerCells = $table.find("thead th"),
-      $rows = $table.find("tbody tr");
 
-  var headers = [],
-      rows = [],
-      highlightedRows = []
-  $headerCells.each(function(k,v) {
-     headers[headers.length] = $(this).text();
+  var isMouseDown = false;
+  var togglingOn = true;
+
+  $("#meme td")
+  .mousedown(function () {
+    if (!$(this).hasClass("cellWhite")) {
+      isMouseDown = true;
+      togglingOn = !$(this).hasClass("highlighted");
+      $(this).toggleClass("highlighted", togglingOn);
+    }
+    return false; // prevent text selection
+  })
+  .mouseover(function () {
+    if (isMouseDown) {
+      $(this).toggleClass("highlighted", togglingOn);
+    }
   });
-  
-  $rows.each(function(row,v) {
-    $(this).find("td").each(function(cell,v) {
-      if (typeof rows[cell] === 'undefined') rows[cell] = [];
-      rows[cell][row] = $(this).text();
-    });
+
+  $(document).mouseup(function () {
+    isMouseDown = false;
   });
 
-
-  console.log(headers);
-  console.log(rows[0]);
-  console.log(rows);
-
-  $("#fb-event-list ul").click(function() {
-    $("#fb-event-id").value($(this).data('id'));
+  $("#fb-event-list a").click(function() {
+    var id = $(this).data('id');
+    console.log(id);
+    $("#fb-event-id").val(id);
+    return false;
   })
 
-});
+  $("#create-form").submit(function(e) {
+    e.preventDefault();
+    // highlighted = [];
+    // console.log($(".highlighted:nth-child(1)").map(function(i,v){$(v).text()}));
+    // highlighted.push($(".highlighted:nth-child(1)").map(function(i,v){$(v).text()}));
+    // highlighted.push($(".highlighted:nth-child(2)").map(function(i,v){$(v).text()}));
+    // highlighted.push($(".highlighted:nth-child(3)").map(function(i,v){$(v).text()}));
+    // highlighted.push($(".highlighted:nth-child(4)").map(function(i,v){$(v).text()}));
+    // highlighted.push($(".highlighted:nth-child(5)").map(function(i,v){$(v).text()}));
+    // highlighted.push($(".highlighted:nth-child(6)").map(function(i,v){$(v).text()}));
+    // highlighted.push($(".highlighted:nth-child(7)").map(function(i,v){$(v).text()}));
+    // console.log(highlighted);
+    // console.log(JSON.stringify(highlighted));
 
-$("#create-form").submit(function() {
-  highlighted = [];
-  highlighted.push($(".highlighted:nth-child(1)"));
-  highlighted.push($(".highlighted:nth-child(2)"));
-  highlighted.push($(".highlighted:nth-child(3)"));
-  highlighted.push($(".highlighted:nth-child(4)"));
-  highlighted.push($(".highlighted:nth-child(5)"));
-  highlighted.push($(".highlighted:nth-child(6)"));
-  highlighted.push($(".highlighted:nth-child(7)"));
-  $("#fb-times").value(JSON.stringify(highlighted));
-  return false;
+    var $table = $("#meme"),
+        $rows = $table.find("tbody tr");
+
+    var headers = [],
+        rows = [];
+    $rows.each(function(row,v) {
+      $(this).find("td").each(function(cell,v) {
+        if (typeof rows[cell] === 'undefined') rows[cell] = [];
+        rows[cell][row] = $(this).hasClass("highlighted");
+      });
+    });
+
+    var days = $.map(rows, function (truefalse, cell) {
+      return [$.map(truefalse, function (v, row) {
+        if (v) {
+          return row;
+        }
+      })];
+    });
+
+    $("#fb-times").val(JSON.stringify(days));
+  });
+
 });
  </script>
 
