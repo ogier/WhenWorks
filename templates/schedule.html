@@ -40,9 +40,9 @@ table td.highlighted {
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header">Facebook Events</li>
+              <li class="nav-header" id="fb-event-list">Facebook Events</li>
               {% for event in events %}
-                <li><a href="#{{ event.id }}">{{ event.name }}</a></li>
+                <li><a href="#" data-id="{{ event.id }}">{{ event.name }}</a></li>
               {% endfor %}
               <li class="nav-header">Create an Event</li>
               <li><input class=span10 type="text" placeholder="Name"></li>
@@ -316,7 +316,11 @@ table td.highlighted {
 </tbody>
 
 </table>​
- <button id="go" type="submit" class="btn pull-right">Go &raquo;</button>
+<form action="/create/" method="POST" id="create-form">
+  <input type="hidden" name="fb-event-id" id="fb-event-id"/>
+  <input type="hidden" name="fb-times" id="fb-times"/>
+  <input id="go" type="submit" class="btn pull-right" name="submit" value="Go &raquo;"/>
+</form>
 
 {% endblock %}
 
@@ -377,9 +381,13 @@ $(function() {
   console.log(rows[0]);
   console.log(rows);
 
+  $("#fb-event-list ul").click(function() {
+    $("#fb-event-id").value($(this).data('id'));
+  })
+
 });
 
-$("#go").click(function() {
+$("#create-form").submit(function() {
   highlighted = [];
   highlighted.push($(".highlighted:nth-child(1)"));
   highlighted.push($(".highlighted:nth-child(2)"));
@@ -388,7 +396,8 @@ $("#go").click(function() {
   highlighted.push($(".highlighted:nth-child(5)"));
   highlighted.push($(".highlighted:nth-child(6)"));
   highlighted.push($(".highlighted:nth-child(7)"));
-  console.log(highlighted);
+  $("#fb-times").value(JSON.stringify(highlighted));
+  return false;
 });
  </script>
 
