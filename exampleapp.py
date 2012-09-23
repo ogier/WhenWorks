@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 def oauth_login_url(preserve_path=True, next_url=None):
     fb_login_uri = ("https://www.facebook.com/dialog/oauth"
                     "?client_id=%s&redirect_uri=%s" %
-                    (app.config['FB_APP_ID'], get_home()))
+                    (app.config['FB_APP_ID'], request.url_root))
 
     if app.config['FBAPI_SCOPE']:
         fb_login_uri += "&scope=%s" % ",".join(app.config['FBAPI_SCOPE'])
@@ -60,6 +60,7 @@ def fbapi_get_string(path,
     url = u'https://' + domain + u'.facebook.com' + path
     params_encoded = encode_func(params)
     url = url + params_encoded
+    print url
     result = requests.get(url).content
 
     return result
@@ -67,12 +68,13 @@ def fbapi_get_string(path,
 
 def fbapi_auth(code):
     params = {'client_id': app.config['FB_APP_ID'],
-              'redirect_uri': get_home(),
+              'redirect_uri': request.url_root,
               'client_secret': app.config['FB_APP_SECRET'],
               'code': code}
 
     result = fbapi_get_string(path=u"/oauth/access_token?", params=params,
                               encode_func=simple_dict_serialisation)
+
     pairs = result.split("&", 1)
     result_dict = {}
     for pair in pairs:
@@ -119,10 +121,6 @@ app.config.from_object('conf.Config')
 app.secret_key = SECRET_KEY
 
 
-def get_home():
-    return 'https://' + request.host + '/'
-
-
 def get_token():
 
     if request.args.get('code', None):
@@ -166,9 +164,6 @@ def get_token():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # print get_home()
-
-
     access_token = get_token()
     channel_url = url_for('get_channel', _external=True)
     channel_url = channel_url.replace('http:', '').replace('https:', '')
@@ -184,7 +179,7 @@ def index():
         photos = fb_call('me/photos',
                          args={'access_token': access_token, 'limit': 16})
 
-        redir = get_home() + 'close/'
+        redir = request.url_root + 'close/'
         POST_TO_WALL = ("https://www.facebook.com/dialog/feed?redirect_uri=%s&"
                         "display=popup&app_id=%s" % (redir, FB_APP_ID))
 
@@ -196,7 +191,7 @@ def index():
 
         SEND_TO = ('https://www.facebook.com/dialog/send?'
                    'redirect_uri=%s&display=popup&app_id=%s&link=%s'
-                   % (redir, FB_APP_ID, get_home()))
+                   % (redir, FB_APP_ID, request.url_root))
 
         url = request.url
 
@@ -214,7 +209,7 @@ def authenticate():
     if session.get('oauth.state') != request.args.get('state'):
         abort(401)
     if request.args.get('error') == 'access_denied':
-        return redirect(get_home())
+        return redirect(request.url_root)
 
     token, expires = fbapi_auth(request.args.get('code'))
     me = fb_call('me', args={'access_token': access_token})
@@ -223,6 +218,7 @@ def authenticate():
 
 @app.route('/create/', methods=['GET', 'POST'])
 def create():
+    print "sitenrienseirnteirnstien"
     if 'user.id' not in session:
         state = base64_url_encode(os.urandom(20))
         session['oauth.state'] = state
@@ -230,7 +226,7 @@ def create():
                         'client_id=%s'
                         '&redirect_uri=%s'
                         '&state=%s'
-                        % (FB_APP_ID, get_home() + 'auth/', state))
+                        % (FB_APP_ID, request.url_root + 'auth/', state))
 
 @app.route('/channel.html', methods=['GET', 'POST'])
 def get_channel():
