@@ -4,6 +4,7 @@ class Config(object):
     DEBUG = True
     TESTING = False
     LOG_LEVEL = os.environ.get('LOG_LEVEL', 'DEBUG')
-    FBAPI_APP_ID = os.environ.get('FACEBOOK_APP_ID')
-    FBAPI_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
-    FBAPI_SCOPE = ['user_likes', 'user_photos', 'user_photo_video_tags']
+    SECRET_KEY = os.environ['SECRET_KEY']
+    FACEBOOK_APP_ID = os.environ['FACEBOOK_APP_ID']
+    FACEBOOK_SECRET = os.environ['FACEBOOK_SECRET']
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
