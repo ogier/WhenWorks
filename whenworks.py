@@ -12,11 +12,9 @@ requests = requests.session()
 from flask import Flask, session, request, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 
+from models import db, Event, Vote
 
-FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
-FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
-SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-SECRET_KEY = os.environ.get('SECRET_KEY')
+__all__ = ['app']
 
 
 def fb_call(call, args=None):
@@ -27,38 +25,8 @@ def fb_call(call, args=None):
 
 
 app = Flask(__name__)
-app.config.from_object(__name__)
 app.config.from_object('conf.Config')
-app.secret_key = SECRET_KEY
-db = SQLAlchemy(app)
-
-
-class Event(db.Model):
-    __tablename__ = 'event'
-    id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.BigInteger)
-    event_id = db.Column(db.BigInteger)
-    available = db.Column(db.String)
-    votes = db.relationship('Vote')
-
-    def __init__(self, author_id, event_id, available):
-        self.author_id = author_id
-        self.event_id = event_id
-        self.available = available
-
-class Vote(db.Model):
-    __tablename__ = 'vote'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.BigInteger)
-    user_name = db.Column(db.String(80))
-    event = db.Column(db.Integer, db.ForeignKey('event.id'))
-    vote = db.Column(db.String)
-
-    def __init__(self, user_id, user_name, event, vote):
-        self.user_id = user_id
-        self.user_name = user_name
-        self.event = event
-        self.vote = vote
+db.init_app(app)
 
 
 def get_token(relative_url):
@@ -66,8 +34,8 @@ def get_token(relative_url):
 
     if not access_token and 'code' in request.args:
         params = {
-            'client_id': FB_APP_ID,
-            'client_secret': FB_APP_SECRET,
+            'client_id': app.config['FACEBOOK_APP_ID'],
+            'client_secret': app.config['FACEBOOK_SECRET'],
             'redirect_uri': request.url_root.rstrip('/') + relative_url,
             'code': request.args['code']
         }
@@ -89,7 +57,7 @@ def auth_redirect(relative_url):
                     'client_id=%s'
                     '&redirect_uri=%s'
                     '&scope=user_events'
-                    % (FB_APP_ID, request.url_root.rstrip('/') + relative_url))
+                    % (app.config['FACEBOOK_APP_ID'], request.url_root.rstrip('/') + relative_url))
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -199,22 +167,3 @@ def get_channel():
 @app.route('/close/', methods=['GET', 'POST'])
 def close():
     return render_template('close.html')
-
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-
-    configured = True
-    def require(conf):
-        if not app.config.get(conf):
-            print ('Cannot start application without %s set' % conf)
-            configured = False
-    require('SECRET_KEY')
-    require('DATABASE_URL')
-    require('FB_APP_ID')
-    require('FB_APP_SECRET')
-
-    if configured:
-        app.run(host='0.0.0.0', port=port)
-    else:
-        exit(1)

@@ -1,1 +1,1 @@
-web: python whenworks.py
+web: python manage.py serve
