@@ -6,11 +6,9 @@ import datetime
 import os
 import json
 
+from flask import Flask, session, request, redirect, render_template, url_for
 import requests
 requests = requests.session()
-
-from flask import Flask, session, request, redirect, render_template, url_for
-from flask.ext.sqlalchemy import SQLAlchemy
 
 from models import db, Event, Vote
 
