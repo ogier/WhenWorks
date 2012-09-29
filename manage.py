@@ -1,5 +1,7 @@
-from flaskext.script import Manager
-from flaskext.evolution import Evolution
+import os
+
+from flask.ext.script import Manager
+from flask.ext.evolution import Evolution
 from whenworks import app
 
 
@@ -14,3 +16,6 @@ def migrate(action):
 def serve():
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
+if __name__ == '__main__':
+    manager.run()
