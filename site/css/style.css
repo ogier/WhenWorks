@@ -1,0 +1,75 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+table th {
+  color: white;
+  width:100px;
+  height:40px;
+  text-align:center;
+  vertical-align:middle;
+
+  background-color:#3B5998;
+  border:1px solid #fff;
+}
+
+table td {
+  width:175px;
+  height:30px;
+  text-align:center;
+  vertical-align:middle;
+  background-color:#ccc;
+  border:1px solid #fff;
+  cursor:pointer;
+  cursor:hand;
+}
+table td.cellWhite
+{
+color: white;
+background-color: White;
+cursor:default;
+}
+
+.shrinkCell
+{
+  height:0px;
+}
+
+
+table td.highlight1 {
+  background-color:#C2EBC0;
+}
+table td.highlight2 {
+  background-color:#A9DEA6;
+}
+table td.highlight3 {
+  background-color:#80CC7C;
+}
+table td.highlight4 {
+  background-color:#4FB34B;
+}
+table td.highlighted {
+  background-color:#7E94D6;
+}
+table td.highlight1.highlighted {
+  background-color:#7E94D6;
+}
+table td.highlight2.highlighted {
+  background-color:#7E94D6;
+}
+table td.highlight3.highlighted {
+  background-color:#7E94D6;
+}
+table td.highlight4.highlighted {
+  background-color:#7E94D6;
+}
+
+.profile img {
+  padding-right: 10px;
+}
+.profile.faded {
+  opacity:.5;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}

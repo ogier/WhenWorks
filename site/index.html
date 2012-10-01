@@ -1,444 +1,93 @@
 <!DOCTYPE html>
-<html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+<html xmlns:fb="http://ogp.me/ns/fb#" lang="en" ng-app>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
 
-    <title>When Works</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-    </style>
-    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
-<style type="text/css">
-  table th {
-  color: white;
-  width:100px;
-  height:40px;
-  text-align:center;
-  vertical-align:middle;
+  <title>When Works</title>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
 
-  background-color:#3B5998;
-  border:1px solid #fff;
-}
+  <!-- These are Open Graph tags.  They add meta data to your  -->
+  <!-- site that facebook uses when your content is shared     -->
+  <!-- over facebook.  You should fill these tags in with      -->
+  <!-- your data.  To learn more about Open Graph, visit       -->
+  <!-- 'https://developers.facebook.com/docs/opengraph/'       -->
+  <meta property="og:title" content="When Works" />
+  <meta property="og:type" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="When Works" />
+  <meta property="og:site_name" content="When Works" />
+  <meta property="og:description" content="Figure out when is the best time for your event." />
+  <meta property="fb:app_id" content="" />
 
-table td {
-  width:175px;
-  height:30px;
-  text-align:center;
-  vertical-align:middle;
-  background-color:#ccc;
-  border:1px solid #fff;
-  cursor:pointer;
-  cursor:hand;
-}
-table td.cellWhite
-{
-color: white;
-background-color: White;
-cursor:default;
-}
-
-.shrinkCell
-{
-  height:0px;
-}
-
-
-table td.highlight1 {
-  background-color:#C2EBC0;
-}
-table td.highlight2 {
-  background-color:#A9DEA6;
-}
-table td.highlight3 {
-  background-color:#80CC7C;
-}
-table td.highlight4 {
-  background-color:#4FB34B;
-}
-table td.highlighted {
-  background-color:#7E94D6;
-}
-table td.highlight1.highlighted {
-  background-color:#7E94D6;
-}
-table td.highlight2.highlighted {
-  background-color:#7E94D6;
-}
-table td.highlight3.highlighted {
-  background-color:#7E94D6;
-}
-table td.highlight4.highlighted {
-  background-color:#7E94D6;
-}
-
-.profile img {
-  padding-right: 10px;
-}
-.profile.faded {
-  opacity:.5;
-  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-}
-</style>
-
-    <!-- These are Open Graph tags.  They add meta data to your  -->
-    <!-- site that facebook uses when your content is shared     -->
-    <!-- over facebook.  You should fill these tags in with      -->
-    <!-- your data.  To learn more about Open Graph, visit       -->
-    <!-- 'https://developers.facebook.com/docs/opengraph/'       -->
-    <meta property="og:title" content="When Works" />
-    <meta property="og:type" content="" />
-    <meta property="og:url" content="" />
-    <meta property="og:image" content="When Works" />
-    <meta property="og:site_name" content="When Works" />
-    <meta property="og:description" content="Figure out when is the best time for your event." />
-    <meta property="fb:app_id" content="" />
-
-    <script type="text/javascript">if(location.hash=='#_=_')location.hash='';</script>
-    <script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+  <script src="/js/moment.min.js"></script>
+  <script src="/js/site.js"></script>
+  <!--[if IE]>
     <script type="text/javascript">
-      function logResponse(response) {
-        if (console && console.log) {
-          console.log('The response was', response);
-        }
-      }
-
-      $(function(){
-        // Set up so we handle click on the buttons
-        $('#postToWall').click(function() {
-          FB.ui(
-            {
-              method : 'feed',
-              link   : $(this).attr('data-url')
-            },
-            function (response) {
-              // If response is null the user canceled the dialog
-              if (response != null) {
-                logResponse(response);
-              }
-            }
-          );
-        });
-
-        $('#sendToFriends').click(function() {
-          FB.ui(
-            {
-              method : 'send',
-              link   : $(this).attr('data-url')
-            },
-            function (response) {
-              // If response is null the user canceled the dialog
-              if (response != null) {
-                logResponse(response);
-              }
-            }
-          );
-        });
-
-        $('#sendRequest').click(function() {
-          FB.ui(
-            {
-              method  : 'apprequests',
-              message : $(this).attr('data-message')
-            },
-            function (response) {
-              // If response is null the user canceled the dialog
-              if (response != null) {
-                logResponse(response);
-              }
-            }
-          );
-        });
-      });
+      var tags = ['header', 'section'];
+      while(tags.length)
+        document.createElement(tags.pop());
     </script>
+  <![endif]-->
+</head>
+<body>
+<div class="container">
 
-    <!--[if IE]>
-      <script type="text/javascript">
-        var tags = ['header', 'section'];
-        while(tags.length)
-          document.createElement(tags.pop());
-      </script>
-    <![endif]-->
+<header class="clearfix">
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active"><a class="brand" href="/">When Works</a>
+          </ul>
+          <form class="navbar-form pull-right">
+            <a href="/create/">
+              <button type="submit" class="btn btn-primary">Schedule an Event</button>
+            </a>
+          </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+</header>
 
-  </head>
-  <body>
-    <div class="container">
-      <header class="clearfix">
-        <div class="navbar navbar-inverse navbar-fixed-top">
-          <div class="navbar-inner">
-            <div class="container">
-              <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </a>
-              <!--<a class="brand" href="/">When Works</a>-->
-              <div class="nav-collapse collapse">
-                <ul class="nav">
-                  <li class="active"><a class="brand" href="/">When Works</a>
-                </ul>
-                <form class="navbar-form pull-right">
-                  <a href="/create/">
-                    <button type="submit" class="btn btn-primary">Schedule an Event</button>
-                  </a>
-                </form>
-              </div><!--/.nav-collapse -->
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div id="fb-root"></div>
+<div id="fb-root"></div>
 
 <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list" id="fb-event-list">
-              <li class="nav-header">Your Facebook Events</li>
-              <li class=""><a href="#" data-id="526658637360283">NY Hackathon test</a></li>
-              <li class=""><a href="#" data-id="112926145526692">FINAL Facebook Hackathon Test Event</a></li>
-              <li class=""><a href="#" data-id="460748207292271">Facebook New York Hackathon</a></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-<table cellpadding="0" cellspacing="0" id="meme">
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list" id="fb-event-list">
+          <li class="nav-header">Your Facebook Events</li>
+          <li class=""><a href="#" data-id="526658637360283">NY Hackathon test</a></li>
+          <li class=""><a href="#" data-id="112926145526692">FINAL Facebook Hackathon Test Event</a></li>
+          <li class=""><a href="#" data-id="460748207292271">Facebook New York Hackathon</a></li>
+        </ul>
+      </div><!--/.well -->
+    </div><!--/span-->
+
+<table cellpadding="0" cellspacing="0" id="meme" ng-controller="CalendarCtrl">
 <thead>
   <tr>
-    <th>Sunday,<br>Sep 30</th>
-    <th>Monday,<br>Oct 01</th>
-    <th>Tuesday,<br>Oct 02</th>
-    <th>Wednesday,<br>Oct 03</th>
-    <th>Thursday,<br>Oct 04</th>
-    <th>Friday,<br>Oct 05</th>
-    <th>Saturday,<br>Oct 06</th>
+    <th ng-repeat="day in days">{{ day|date:'EEEE,' }}<br>{{ day|date:'MMMM d' }}</th>
   </tr>
 </thead>
 <tbody>
-  <tr>
-          <td>12 AM</td>
-          <td>12 AM</td>
-          <td>12 AM</td>
-          <td>12 AM</td>
-          <td>12 AM</td>
-          <td>12 AM</td>
-          <td>12 AM</td>
-  </tr>
-  <tr>
-          <td>1 AM</td>
-          <td>1 AM</td>
-          <td>1 AM</td>
-          <td>1 AM</td>
-          <td>1 AM</td>
-          <td>1 AM</td>
-          <td>1 AM</td>
-  </tr>
-  <tr>
-          <td>2 AM</td>
-          <td>2 AM</td>
-          <td>2 AM</td>
-          <td>2 AM</td>
-          <td>2 AM</td>
-          <td>2 AM</td>
-          <td>2 AM</td>
-  </tr>
-  <tr>
-          <td>3 AM</td>
-          <td>3 AM</td>
-          <td>3 AM</td>
-          <td>3 AM</td>
-          <td>3 AM</td>
-          <td>3 AM</td>
-          <td>3 AM</td>
-  </tr>
-  <tr>
-          <td>4 AM</td>
-          <td>4 AM</td>
-          <td>4 AM</td>
-          <td>4 AM</td>
-          <td>4 AM</td>
-          <td>4 AM</td>
-          <td>4 AM</td>
-  </tr>
-  <tr>
-          <td>5 AM</td>
-          <td>5 AM</td>
-          <td>5 AM</td>
-          <td>5 AM</td>
-          <td>5 AM</td>
-          <td>5 AM</td>
-          <td>5 AM</td>
-  </tr>
-  <tr>
-          <td>6 AM</td>
-          <td>6 AM</td>
-          <td>6 AM</td>
-          <td>6 AM</td>
-          <td>6 AM</td>
-          <td>6 AM</td>
-          <td>6 AM</td>
-  </tr>
-  <tr>
-          <td>7 AM</td>
-          <td>7 AM</td>
-          <td>7 AM</td>
-          <td>7 AM</td>
-          <td>7 AM</td>
-          <td>7 AM</td>
-          <td>7 AM</td>
-  </tr>
-  <tr>
-          <td>8 AM</td>
-          <td>8 AM</td>
-          <td>8 AM</td>
-          <td>8 AM</td>
-          <td>8 AM</td>
-          <td>8 AM</td>
-          <td>8 AM</td>
-  </tr>
-  <tr>
-          <td>9 AM</td>
-          <td>9 AM</td>
-          <td>9 AM</td>
-          <td>9 AM</td>
-          <td>9 AM</td>
-          <td>9 AM</td>
-          <td>9 AM</td>
-  </tr>
-  <tr>
-          <td>10 AM</td>
-          <td>10 AM</td>
-          <td>10 AM</td>
-          <td>10 AM</td>
-          <td>10 AM</td>
-          <td>10 AM</td>
-          <td>10 AM</td>
-  </tr>
-  <tr>
-          <td>11 AM</td>
-          <td>11 AM</td>
-          <td>11 AM</td>
-          <td>11 AM</td>
-          <td>11 AM</td>
-          <td>11 AM</td>
-          <td>11 AM</td>
-  </tr>
-  <tr>
-          <td>12 PM</td>
-          <td>12 PM</td>
-          <td>12 PM</td>
-          <td>12 PM</td>
-          <td>12 PM</td>
-          <td>12 PM</td>
-          <td>12 PM</td>
-  </tr>
-  <tr>
-          <td>1 PM</td>
-          <td>1 PM</td>
-          <td>1 PM</td>
-          <td>1 PM</td>
-          <td>1 PM</td>
-          <td>1 PM</td>
-          <td>1 PM</td>
-  </tr>
-  <tr>
-          <td>2 PM</td>
-          <td>2 PM</td>
-          <td>2 PM</td>
-          <td>2 PM</td>
-          <td>2 PM</td>
-          <td>2 PM</td>
-          <td>2 PM</td>
-  </tr>
-  <tr>
-          <td>3 PM</td>
-          <td>3 PM</td>
-          <td>3 PM</td>
-          <td>3 PM</td>
-          <td>3 PM</td>
-          <td>3 PM</td>
-          <td>3 PM</td>
-  </tr>
-  <tr>
-          <td>4 PM</td>
-          <td>4 PM</td>
-          <td>4 PM</td>
-          <td>4 PM</td>
-          <td>4 PM</td>
-          <td>4 PM</td>
-          <td>4 PM</td>
-  </tr>
-  <tr>
-          <td>5 PM</td>
-          <td>5 PM</td>
-          <td>5 PM</td>
-          <td>5 PM</td>
-          <td>5 PM</td>
-          <td>5 PM</td>
-          <td>5 PM</td>
-  </tr>
-  <tr>
-          <td>6 PM</td>
-          <td>6 PM</td>
-          <td>6 PM</td>
-          <td>6 PM</td>
-          <td>6 PM</td>
-          <td>6 PM</td>
-          <td>6 PM</td>
-  </tr>
-  <tr>
-          <td>7 PM</td>
-          <td>7 PM</td>
-          <td>7 PM</td>
-          <td>7 PM</td>
-          <td>7 PM</td>
-          <td>7 PM</td>
-          <td>7 PM</td>
-  </tr>
-  <tr>
-          <td>8 PM</td>
-          <td>8 PM</td>
-          <td>8 PM</td>
-          <td>8 PM</td>
-          <td>8 PM</td>
-          <td>8 PM</td>
-          <td>8 PM</td>
-  </tr>
-  <tr>
-          <td>9 PM</td>
-          <td>9 PM</td>
-          <td>9 PM</td>
-          <td>9 PM</td>
-          <td>9 PM</td>
-          <td>9 PM</td>
-          <td>9 PM</td>
-  </tr>
-  <tr>
-          <td>10 PM</td>
-          <td>10 PM</td>
-          <td>10 PM</td>
-          <td>10 PM</td>
-          <td>10 PM</td>
-          <td>10 PM</td>
-          <td>10 PM</td>
-  </tr>
-  <tr>
-          <td>11 PM</td>
-          <td>11 PM</td>
-          <td>11 PM</td>
-          <td>11 PM</td>
-          <td>11 PM</td>
-          <td>11 PM</td>
-          <td>11 PM</td>
+  <tr ng-repeat="hour in hours">
+    <td ng-repeat="day in days">{{ hour }}</td>
   </tr>
 </tbody>
-
 </table>
+
 <form method="POST" id="create-form">
   <input type="hidden" name="fb-event-id" id="fb-event-id"/>
   <input type="hidden" name="fb-times" id="fb-times"/>
@@ -447,134 +96,47 @@ table td.highlight4.highlighted {
   />
 </form>
 
+<hr>
+<footer>
+  <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>. Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+  <p>&copy; Facebook NY Hackathon 2012</p>
+</footer>
 
+</div>
 
-      <hr>
-
-      <footer>
-        <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>. Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
-        <p>&copy; Facebook NY Hackathon 2012</p>
-      </footer>
-    </div>
-
-    <script type="text/javascript">
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '', // App ID
-          // channelUrl : '', // Channel File
-          status     : true, // check login status
-          cookie     : true, // enable cookies to allow the server to access the session
-          xfbml      : true // parse XFBML
-        });
-
-        // Listen to the auth.login which will be called when the user logs in
-        // using the Login button
-        FB.Event.subscribe('auth.login', function(response) {
-          // We want to reload the page now so Ruby can read the cookie that the
-          // Javascript SDK sat. But we don't want to use
-          // window.location.reload() because if this is in a canvas there was a
-          // post made to this page and a reload will trigger a message to the
-          // user asking if they want to send data again.
-          window.location = window.location;
-        });
-
-        FB.Canvas.setAutoGrow();
-      };
-
-      // Load the SDK Asynchronously
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    </script>
 <script type="text/javascript">
-$(function() {
-
-  var isMouseDown = false;
-  var togglingOn = true;
-
-  $("#meme td")
-  .mousedown(function () {
-    if (!$(this).hasClass("cellWhite")) {
-      isMouseDown = true;
-      togglingOn = !$(this).hasClass("highlighted");
-      $(this).toggleClass("highlighted", togglingOn);
-    }
-    return false; // prevent text selection
-  })
-  .mouseover(function () {
-    if (!$(this).hasClass("cellWhite")) {
-      if (isMouseDown) {
-        $(this).toggleClass("highlighted", togglingOn);
-      }
-      $('.profile').addClass('faded');
-      $.each($(this).data('userids'), function (i, userid) {
-        $('.profile-'+userid).removeClass('faded');
-      });
-    }
-    if ($(this).data('count')) {
-      $(this).data('time', $(this).text());
-      $(this).text($(this).data('count'));
-    }
-  })
-  .mouseout(function () {
-    if ($(this).data('time')) {
-      $(this).text($(this).data('time'));
-    }
-    $('.profile').removeClass('faded');
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '', // App ID
+    // channelUrl : '', // Channel File
+    status     : true, // check login status
+    cookie     : true, // enable cookies to allow the server to access the session
+    xfbml      : true // parse XFBML
   });
 
-  $(document).mouseup(function () {
-    isMouseDown = false;
+  // Listen to the auth.login which will be called when the user logs in
+  // using the Login button
+  FB.Event.subscribe('auth.login', function(response) {
+    // We want to reload the page now so Ruby can read the cookie that the
+    // Javascript SDK sat. But we don't want to use
+    // window.location.reload() because if this is in a canvas there was a
+    // post made to this page and a reload will trigger a message to the
+    // user asking if they want to send data again.
+    window.location = window.location;
   });
 
-  $("#fb-event-list a").click(function() {
-    var id = $(this).data('id');
-    $("#fb-event-id").val(id);
-    $("#go").removeAttr("disabled").val("Go »");
+  FB.Canvas.setAutoGrow();
+};
 
-    $("#fb-event-list li").removeClass("active");
-    $(this).parent("li").addClass("active");
-    return false;
-  })
+// Load the SDK Asynchronously
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
 
-  $("#create-form").submit(function(e) {
-    // e.preventDefault();
-
-    var $table = $("#meme"),
-        $rows = $table.find("tbody tr");
-
-    var headers = [],
-        rows = [];
-    $rows.each(function(row,v) {
-      $(this).find("td").each(function(cell,v) {
-        if (typeof rows[cell] === 'undefined') rows[cell] = [];
-        rows[cell][row] = $(this).hasClass("highlighted");
-      });
-    });
-
-    var days = $.map(rows, function (truefalse, cell) {
-      return [$.map(truefalse, function (v, row) {
-        if (v) {
-          return row;
-        }
-      })];
-    });
-
-    $("#fb-times").val(JSON.stringify(days));
-  });
-
-});
-
-
-
-
-
- </script>
-
-
-  </body>
+</body>
 </html>
