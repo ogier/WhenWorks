@@ -1,19 +1,19 @@
 package main
 
 import (
-	"path/filepath"
-//	"fmt"
+	"fmt"
 	"net/http"
 	"log"
-	"os"
+	//"os"
 )
 
-func main() {
-	static_root, err := filepath.Abs("site")
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	http.Handle("/", http.FileServer(http.Dir(static_root)))
-	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), nil))
+func main() {
+	config := NewConfig()
+
+	http.HandleFunc("/api/event/", JsonHandler(EventApi))
+	http.Handle("/", http.FileServer(http.Dir(config.static_root)))
+
+	fmt.Println("Listening on port", config.port)
+	log.Fatal(http.ListenAndServe(":" + config.port, nil))
 }
